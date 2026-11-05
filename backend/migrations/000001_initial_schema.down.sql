@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS assets;
+DROP TABLE IF EXISTS generation_tasks;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS conversations;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS workspace_members;
+DROP TABLE IF EXISTS workspaces;
+DROP TABLE IF EXISTS users;
