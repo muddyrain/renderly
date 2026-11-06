@@ -1,0 +1,416 @@
+/* B4–B6: graphite collections and forms, scoped to the workspace theme. */
+.workspace-content {
+  max-width: 1400px;
+}
+.workspace-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+.workspace-session-note {
+  margin: 24px 0;
+  border-left: 2px solid rgb(var(--primary));
+  padding-left: 12px;
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.workspace-content h2 {
+  font-size: 16px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.workspace-content p,
+.workspace-content dd,
+.preview-dialog dd,
+.preview-dialog p {
+  overflow-wrap: anywhere;
+}
+.workspace-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0 16px;
+}
+.workspace-toolbar > input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 420px;
+}
+.renderly-theme select {
+  min-width: 0;
+  max-width: 100%;
+  height: 36px;
+  border: 1px solid rgb(var(--border));
+  border-radius: 6px;
+  background: rgb(var(--background));
+  padding: 0 10px;
+  color: rgb(var(--foreground));
+}
+.workspace-toolbar select {
+  max-width: 200px;
+}
+.workspace-check,
+.workspace-checkbox-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.renderly-theme input[type="checkbox"],
+.renderly-theme input[type="range"] {
+  accent-color: rgb(var(--primary));
+}
+.workspace-section-caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  font-size: 12px;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-section-caption svg {
+  width: 14px;
+  height: 14px;
+}
+.workspace-count,
+.workspace-meta {
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+}
+.workspace-count {
+  flex-shrink: 0;
+}
+.workspace-collection-empty {
+  display: flex;
+  min-height: 320px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border: 1px dashed rgb(var(--border));
+  text-align: center;
+  padding: 32px;
+  margin-top: 24px;
+}
+.workspace-collection-empty > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: rgb(var(--muted-foreground));
+}
+.gallery-grid {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+.gallery-grid-comfortable {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.gallery-grid-compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.gallery-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  background: rgb(var(--surface));
+}
+.gallery-thumbnail {
+  aspect-ratio: 3/2;
+  position: relative;
+  background: rgb(var(--canvas));
+}
+.gallery-thumbnail .studio-artwork-resource {
+  height: 100%;
+}
+.gallery-thumbnail .studio-artwork {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.gallery-card-body {
+  padding: 12px 16px 16px;
+}
+.workspace-text-button {
+  color: rgb(var(--foreground));
+  text-align: left;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.workspace-text-button:hover {
+  text-decoration: underline;
+}
+.workspace-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+}
+.renderly-theme .gallery-detail-dialog {
+  max-width: 1120px;
+  gap: 20px;
+}
+.gallery-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 24px;
+  min-width: 0;
+}
+.gallery-detail-artwork {
+  min-width: 0;
+  align-self: start;
+}
+.gallery-detail-artwork > .studio-artwork-resource,
+.gallery-compare {
+  position: relative;
+  aspect-ratio: 1400/933;
+  background: rgb(var(--canvas));
+}
+.gallery-detail-info,
+.workspace-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+.gallery-detail-info label,
+.workspace-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.gallery-compare img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.gallery-compare-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid rgb(var(--primary));
+  pointer-events: none;
+}
+.gallery-comparison-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.workspace-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.workspace-info dt {
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+}
+.workspace-info dd {
+  overflow-wrap: anywhere;
+}
+.workspace-project-grid,
+.workspace-character-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+.workspace-project-card,
+.workspace-character-card,
+.workspace-config-card {
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgb(var(--surface));
+  min-width: 0;
+}
+.workspace-project-cover {
+  height: 164px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgb(var(--canvas));
+  color: rgb(var(--muted-foreground));
+}
+.workspace-project-cover img {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  height: 100%;
+  object-fit: cover;
+}
+.workspace-project-cover svg {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+.workspace-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+}
+.workspace-card-copy > p {
+  min-height: 44px;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-character-card,
+.workspace-config-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.workspace-character-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.workspace-character-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--selection));
+  color: rgb(var(--primary));
+}
+.workspace-mood-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.workspace-mood-strip figure {
+  width: 120px;
+}
+.workspace-mood-strip img {
+  width: 120px;
+  height: 80px;
+  object-fit: contain;
+}
+.workspace-mood-strip figcaption {
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+  margin-top: 4px;
+}
+.workspace-checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+.workspace-checkbox-list label {
+  flex-direction: row;
+  overflow-wrap: anywhere;
+}
+.workspace-character-dialog {
+  max-width: 640px;
+}
+.workspace-error {
+  color: rgb(var(--destructive-foreground));
+}
+.workspace-callout {
+  margin: 24px 0;
+  max-width: 800px;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-config-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+.workspace-model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.workspace-model-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+}
+.workspace-model-card > svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: rgb(var(--primary));
+}
+.workspace-model-card p {
+  margin: 8px 0;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-provider-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+}
+.workspace-provider-state svg {
+  width: 16px;
+  height: 16px;
+}
+.workspace-project-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: 12px;
+  color: rgb(var(--muted-foreground));
+}
+.workspace-project-picker select {
+  width: 210px;
+  text-overflow: ellipsis;
+}
+.workspace-project-header > span.ml-auto {
+  margin-left: 0;
+  flex-shrink: 0;
+}
+.studio-context {
+  padding: 0 0 16px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1300px) {
+  .workspace-project-picker select {
+    width: 170px;
+  }
+  .workspace-project-header {
+    gap: 16px;
+    padding: 0 20px;
+  }
+  .workspace-content {
+    padding: 28px;
+  }
+  .gallery-detail-dialog {
+    max-width: 1050px;
+  }
+}

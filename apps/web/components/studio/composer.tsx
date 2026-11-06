@@ -76,7 +76,7 @@ export function Composer({
         {state.draft.length} / {MAX_PROMPT_LENGTH} 字
         {tooLong
           ? " · 超出限制，请缩短；不会静默截断。"
-          : " · 离开或刷新会重置"}
+          : " · 跨页保留，刷新重置"}
       </p>
     </div>
   );

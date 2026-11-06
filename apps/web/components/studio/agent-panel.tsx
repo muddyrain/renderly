@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Plus, Sparkles, Square, Play } from "lucide-react";
@@ -127,6 +128,11 @@ export function AgentPanel({
             agent={agent}
           />
         )}
+        {state.brief && <div className="studio-context text-xs text-muted-foreground">
+          <p>计划项目：{state.context.project?.name ?? "未归属"}</p>
+          <p>示例模型：{state.context.model ? `${state.context.model.name} · 细节 ${state.context.model.detail}/10` : "暂无示例模型"}</p>
+          {!state.context.model && <Link href="/models" className="underline">前往 Models 恢复示例配置</Link>}
+        </div>}
         {state.brief && (
           <section ref={planSection} className="studio-plan">
             <Button
@@ -188,6 +194,7 @@ export function AgentPanel({
         {state.phase === "awaiting_approval" && (
           <Button
             ref={approveButton}
+            disabled={!state.context.model}
             className="w-full"
             onClick={() => {
               if (agent.approve())

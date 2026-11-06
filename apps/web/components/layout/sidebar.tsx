@@ -54,7 +54,7 @@ export function Sidebar() {
       </LayoutGroup>
       <div className="mt-auto flex flex-col gap-2 border-t border-border pt-4">
         <span className="text-xs text-primary">演示工作区</span>
-        <p className="text-xs text-muted-foreground">浏览创作空间。<br />内容不会保存。</p>
+        <p className="text-xs text-muted-foreground">本次演示有效。<br />跨页保留，刷新重置。</p>
         {process.env.NODE_ENV === "development" && (
           <nav aria-label="开发对照入口" className="mt-2 flex flex-col gap-1">
             <Button asChild variant="navigation" size="sm" className="justify-start">

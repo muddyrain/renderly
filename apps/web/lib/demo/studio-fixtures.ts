@@ -4,6 +4,7 @@ import type {
   DemoImage,
   StudioState,
 } from "@/types/studio";
+import { defaultPlanContext } from "./workspace-defaults";
 
 export const DEMO_STEPS = [
   "整理演示方向",
@@ -94,6 +95,7 @@ export function defaultBrief(goal = "探索自然主题视觉提案"): CreativeB
 export function initialStudioState(session = 1, preset = true): StudioState {
   return {
     session,
+    context: defaultPlanContext(),
     revision: preset ? 1 : 0,
     phase: preset ? "awaiting_approval" : "idle",
     brief: preset ? defaultBrief() : null,

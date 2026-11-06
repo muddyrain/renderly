@@ -130,6 +130,8 @@ export function CanvasPanel({
                       上次批准的演示快照 · r{state.result.snapshot.revision}
                     </h3>
                     <p>{state.result.snapshot.brief.goal}</p>
+                    <p>批准项目：{state.result.snapshot.context.project?.name ?? "未归属"}</p>
+                    <p>示例模型：{state.result.snapshot.context.model?.name} · 细节 {state.result.snapshot.context.model?.detail}/10</p>
                     <p className="text-muted-foreground">
                       画幅意向 {state.result.snapshot.brief.ratio} ·
                       不裁切或改变预置文件
