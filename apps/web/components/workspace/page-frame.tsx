@@ -1,4 +1,5 @@
 "use client";
+import { useRef } from "react";
 import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +64,7 @@ export function ConfirmDialog({
   close: () => void;
   focusAfterClose?: () => HTMLElement | null;
 }) {
+  const cancelButton = useRef<HTMLButtonElement>(null);
   return (
     <Dialog
       open={open}
@@ -71,6 +73,10 @@ export function ConfirmDialog({
       }}
     >
       <DialogContent
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          cancelButton.current?.focus();
+        }}
         onCloseAutoFocus={
           focusAfterClose
             ? (event) => {
@@ -85,7 +91,7 @@ export function ConfirmDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="secondary" autoFocus onClick={close}>
+          <Button ref={cancelButton} variant="secondary" onClick={close}>
             取消
           </Button>
           <Button

@@ -107,6 +107,11 @@ test("completed runs append once, with approval-time project/model/ratio/artwork
   assert.equal(results.length, 1);
   assert.equal(results[0].snapshot, snapshot);
   assert.equal(results[0].selection.imageId, "mountain");
+  assert.equal(agent.getSnapshot().assetId, snapshot.artwork.assetId);
+  assert.equal(
+    agent.getSnapshot().selections[snapshot.artwork.assetId].variantId,
+    snapshot.artwork.variantId,
+  );
   assert.equal(results[0].projectId, "nature");
   assert.equal(snapshot.context.project.name, "自然光景提案");
   assert.equal(Object.isFrozen(snapshot.context.model), true);
@@ -331,4 +336,16 @@ test("changing/resetting default model during a run affects only the next plan",
   agent.send();
   assert.equal(agent.getSnapshot().context.model.modelId, "scenic");
   assert.equal(agent.getSnapshot().context.model.detail, 5);
+});
+
+test("changing context after failure removes the obsolete alert and preserves the draft", () => {
+  const { store, agent, runs } = harness();
+  agent.setDraft("保留草稿");
+  agent.approve();
+  runs[0].publish({ type: "failure", message: "受控的旧错误" });
+  assert.equal(agent.getSnapshot().error, "受控的旧错误");
+  store.selectProject("woodland");
+  assert.equal(agent.getSnapshot().phase, "awaiting_approval");
+  assert.equal(agent.getSnapshot().error, null);
+  assert.equal(agent.getSnapshot().draft, "保留草稿");
 });

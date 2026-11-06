@@ -75,11 +75,11 @@ The root `pnpm-lock.yaml` is the only workspace lock. CI and the web Dockerfile 
 
 ## UI and demo interactions
 
-The six workspace routes support direct access, refresh, Next Link navigation and browser history. Navigation active state and breadcrumb come from the pathname. Gallery, Projects and Characters show unconnected empty states; Models and Settings show read-only connection/preference information. Studio approval runs only a deterministic local demonstration; no credentials, model requests, upload or save operations are connected.
+The six workspace routes support direct access, refresh, Next Link navigation and browser history. Navigation active state and breadcrumb come from the pathname. Gallery supports local collections, favorites, comparison and sample download; Projects and Characters support local CRUD and references. Models and Settings apply validated local configuration with real consumers. Studio approval runs only a deterministic local demonstration; no credentials, model requests, upload or save operations are connected.
 
 The new workspace uses restrained 160ms navigation selection and page entry feedback, with live reduced-motion support. Studio Canvas / Variants consumes a React adaptation of the authorized Inspira MIT port of Aceternity Tabs; see [source and license](docs/design/ACETERNITY_SOURCE.md). Gallery now uses local layout feedback, Radix detail and a native keyboard comparison range; no extra upstream component source is copied. shadcn / Radix continue to own basic component semantics and overlays.
 
-Studio starts with a labelled preset conversation, editable Brief, pending plan and sample image. New session clears all local state; it does not implicitly reload samples. Enter inserts a newline; Ctrl/Cmd+Enter sends after composition input ends, with a 4000-character limit that preserves over-limit text. Sending prepares a plan; explicit approval locks its revision. Cancellation, failure, reset and navigation invalidate old callbacks. Retry requires review and approval again. A fixed “查看计划 · 3 步” shortcut reveals the single Plan before approval, including on low-height displays. Refresh resets to the preset; nothing is persisted.
+Studio starts with a labelled preset conversation, editable Brief, pending plan and sample image. New session clears Studio conversation, Brief, draft, result and selections while retaining workspace records, favorites and preferences; it does not implicitly reload samples. Enter inserts a newline; Ctrl/Cmd+Enter sends after composition input ends, with a 4000-character limit that preserves over-limit text. Sending prepares a plan; explicit approval locks its revision. Cancellation, failure, reset and navigation invalidate old callbacks. Retry requires review and approval again. A fixed “查看计划 · 3 步” shortcut reveals the single Plan before approval, including on low-height displays. Refresh resets to the preset; nothing is persisted.
 
 Three [local sample photos](docs/design/DEMO_ASSETS.md) support asset / version / variant selection, image failure recovery, parameters and zoom. Sample photos and local completion are never described as real model output. The development-only scenario selector provides deterministic failure verification; it is absent from production. Run lifecycle checks from the root with `pnpm --filter @renderly/web test:studio`.
 
@@ -91,10 +91,10 @@ Stop the development server before type generation or production builds; run the
 pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm --filter @renderly/web test:studio
 pnpm --filter @renderly/web test:workspace
-pnpm build
 pnpm lint
 pnpm typecheck
 pnpm --filter @renderly/web exec tsc --noEmit --incremental false --noUncheckedSideEffectImports true
+pnpm build
 cd backend
 go test ./...
 go vet ./...

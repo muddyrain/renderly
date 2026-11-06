@@ -410,7 +410,7 @@
   .workspace-content {
     padding: 28px;
   }
-  .gallery-detail-dialog {
+  .renderly-theme .gallery-detail-dialog {
     max-width: 1050px;
   }
 }

@@ -272,6 +272,14 @@ export class DemoAgent {
         this.invalidate();
         this.update({
           phase: "completed",
+          assetId: snapshot.artwork.assetId,
+          selections: {
+            ...this.state.selections,
+            [snapshot.artwork.assetId]: {
+              versionId: snapshot.artwork.versionId,
+              variantId: snapshot.artwork.variantId,
+            },
+          },
           steps: ["completed", "completed", "completed"],
           result: { source: "demo", revision: snapshot.revision, snapshot },
           messages: [
