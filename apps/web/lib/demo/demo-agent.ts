@@ -335,9 +335,15 @@ export class DemoAgent {
       revision: this.state.revision + 1,
       phase: this.state.brief ? "awaiting_approval" : "idle",
       run: null,
+      error: null,
       steps: ["pending", "pending", "pending"],
       notice: "创作上下文已更新，原批准失效；草稿保留，请重新审阅。",
     });
+  };
+  syncProjectName = (id: string, name: string) => {
+    if (this.state.context.project?.id !== id) return;
+    // Rename is display metadata; the approved run retains its frozen copy.
+    this.update({ context: { ...this.state.context, project: { id, name } } });
   };
   selectAsset = (assetId: string) => {
     if (demoAssets.some((asset) => asset.id === assetId))

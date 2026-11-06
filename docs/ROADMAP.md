@@ -41,7 +41,8 @@ Business implementation waits for the maintainer's confirmation at the current C
 - [x] B3/B3.1: guarded local Studio, offline photos, authorized Inspira MIT Tabs, legacy cleanup and unified favicon
 - [x] PR #1 merged at reviewed HEAD `81b73a540b655fc488f9fb399dc4148f656ea6ed`; merge `1ea0920bcc44b426ca775a6035daeea682ca6a37`
 - [x] B4: Gallery grid, combined filters/favorites, detail, version/variant selection, keyboard comparison, sample download and Studio continuation
-- [x] B5: local projects/characters CRUD, model configuration and workspace preferences with consumers
+- [x] B4: local projects/characters CRUD, references and association cleanup
+- [x] B5: model configuration and workspace preferences with consumers
 - [x] B6: single in-memory workspace, immutable approved snapshots, once-only Gallery completion, route cancellation and one-shot reference intents
 - [x] Workspace lifecycle tests and strict CSS checks wired into CI; desktop/browser evidence retained locally
 - [ ] Maintainer review of the B4–B6 PR; do not merge automatically

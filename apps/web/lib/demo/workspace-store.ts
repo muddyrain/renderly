@@ -50,6 +50,21 @@ export function assetArtwork(asset: WorkspaceAsset) {
     selections: { [asset.selection.assetId]: asset.selection },
   });
 }
+export function comparisonArtwork(asset: WorkspaceAsset) {
+  const current = assetArtwork(asset);
+  const version = current.asset.versions.find(
+    (v) => v.id !== current.version.id,
+  );
+  if (!version) return null;
+  const variant =
+    version.variants.find((v) => v.imageId !== current.image.id) ??
+    version.variants[0];
+  return {
+    version,
+    variant,
+    image: demoImages.find((image) => image.id === variant.imageId)!,
+  };
+}
 const validName = (name: string) =>
   name.trim().length > 0 && name.trim().length <= 120;
 
@@ -122,6 +137,7 @@ export class WorkspaceStore {
           : p,
       ),
     });
+    this.agent.syncProjectName(id, name.trim());
     return true;
   }
   selectProject(id: string | null) {
@@ -306,7 +322,8 @@ export class WorkspaceStore {
     this.announce("示例模型配置已应用到后续计划，Provider 仍未连接。", {
       modelConfig: { ...config },
     });
-    this.agent.refreshContext();
+    if (this.agent.getSnapshot().phase !== "running")
+      this.agent.refreshContext();
     return true;
   }
   resetModels() {
@@ -314,7 +331,8 @@ export class WorkspaceStore {
       models: exampleModels.map((m) => ({ ...m })),
       modelConfig: defaultModelConfig(),
     });
-    this.agent.refreshContext();
+    if (this.agent.getSnapshot().phase !== "running")
+      this.agent.refreshContext();
     this.announce("示例模型配置已恢复。");
   }
   applyPreferences(values: WorkspacePreferences) {

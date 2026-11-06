@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { ArtworkComparison } from "./artwork-comparison";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -16,10 +16,10 @@ import {
 import { ArtworkImage } from "@/components/studio/artwork-image";
 import {
   assetArtwork,
+  comparisonArtwork,
   filteredAssets,
   type AssetFilters,
 } from "@/lib/demo/workspace-store";
-import { demoImages } from "@/lib/demo/studio-fixtures";
 import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { useWorkspace } from "./workspace-provider";
 import { PageFrame, EmptyState, ConfirmDialog } from "./page-frame";
@@ -50,10 +50,8 @@ export function GalleryWorkbench() {
     }
   }, [selectedId, selected]);
   const current = selected ? assetArtwork(selected) : null;
-  const before = current?.asset.versions
-    .flatMap((v) => v.variants)
-    .find((v) => v.imageId !== current.image.id);
-  const beforeImage = demoImages.find((image) => image.id === before?.imageId);
+  const before = selected ? comparisonArtwork(selected) : null;
+  const beforeImage = before?.image;
   const patch = (value: Partial<AssetFilters>) =>
     setFilters((previous) => ({ ...previous, ...value }));
   return (
@@ -219,33 +217,18 @@ export function GalleryWorkbench() {
               <div className="gallery-detail-layout">
                 <div className="gallery-detail-artwork">
                   {compare && beforeImage ? (
-                    <div className="gallery-compare">
-                      <Image
-                        src={beforeImage.src}
-                        alt={`对照：${beforeImage.alt}`}
-                        width={1400}
-                        height={933}
-                        unoptimized
-                      />
-                      <Image
-                        src={current.image.src}
-                        alt={`当前：${current.image.alt}`}
-                        width={1400}
-                        height={933}
-                        unoptimized
-                        style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}
-                      />
-                      <span
-                        className="gallery-compare-line"
-                        style={{ left: `${split}%` }}
-                      />
-                    </div>
+                    <ArtworkComparison
+                      current={current.image}
+                      before={beforeImage}
+                      split={split}
+                    />
                   ) : (
                     <ArtworkImage image={current.image} />
                   )}
                   {compare && beforeImage && (
                     <label className="gallery-comparison-control">
-                      {current.image.title} / {beforeImage.title}
+                      {current.version.label}：{current.image.title} /{" "}
+                      {before?.version.label}：{beforeImage.title}
                       <input
                         type="range"
                         min="0"
@@ -350,6 +333,11 @@ export function GalleryWorkbench() {
                   )}
                 </div>
               </div>
+              {!before && (
+                <p className="workspace-meta">
+                  该样例只有一个预置版本，暂不可比较。
+                </p>
+              )}
               <div className="workspace-actions">
                 <Button
                   variant="secondary"

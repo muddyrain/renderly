@@ -43,4 +43,4 @@ pnpm build
 git diff --check
 ```
 
-Studio (12 cases), workspace domain/lifecycle (12 cases) and strict CSS imports execute in CI; Button type-contract checks remain in typecheck. Local browser evidence lives under ignored `review/P0.10-B4-B6-Frontend-Closeout-2026-11-06/`. PR records actual checks and limitations; a completed frontend demo is not P1 completion. New PR merge requires human review.
+Studio (12 cases), workspace domain/lifecycle (15 cases) and strict CSS imports execute in CI; Button type-contract checks remain in typecheck. Local browser evidence lives under ignored `review/P0.10-B4-B6-Frontend-Closeout-2026-11-06/`. PR records actual checks and limitations; a completed frontend demo is not P1 completion. New PR merge requires human review.

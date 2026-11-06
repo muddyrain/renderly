@@ -8,7 +8,7 @@ const moduleAt = (name) =>
       path.join(process.env.RENDERLY_STUDIO_TEST_BUILD, `lib/demo/${name}.js`),
     ).href
   );
-const { WorkspaceStore, filteredAssets, assetArtwork } =
+const { WorkspaceStore, filteredAssets, assetArtwork, comparisonArtwork } =
   await moduleAt("workspace-store");
 const { initialWorkspace } = await moduleAt("workspace-fixtures");
 const { effectiveReducedMotion } = await moduleAt("workspace-defaults");
@@ -283,4 +283,52 @@ test("a fresh store restores fixtures without sharing mutable arrays with seed o
     }),
     false,
   );
+});
+
+test("renaming a project synchronizes current plan metadata without rewriting approved snapshots", () => {
+  const { store, agent, runs } = harness();
+  store.renameProject("nature", "新的项目名", "");
+  assert.equal(agent.getSnapshot().context.project.name, "新的项目名");
+  agent.approve();
+  const approved = runs[0].snapshot;
+  store.renameProject("nature", "再次更名", "");
+  assert.equal(agent.getSnapshot().phase, "running");
+  assert.equal(agent.getSnapshot().context.project.name, "再次更名");
+  assert.equal(approved.context.project.name, "新的项目名");
+  runs[0].publish({ type: "complete" });
+  assert.equal(
+    store.getSnapshot().assets.at(-1).snapshot.context.project.name,
+    "新的项目名",
+  );
+});
+
+test("comparison uses a different preset version of the same asset, and single-version assets have no comparison", () => {
+  const { store } = harness();
+  const asset = store.getSnapshot().assets[0];
+  const before = comparisonArtwork(asset);
+  assert.notEqual(before.version.id, asset.selection.versionId);
+  assert.notEqual(before.image.id, asset.selection.imageId);
+  assert.equal(comparisonArtwork(store.getSnapshot().assets[2]), null);
+});
+
+test("changing/resetting default model during a run affects only the next plan", () => {
+  const { store, agent, runs } = harness();
+  store.applyModel({ modelId: "study", detail: 8 });
+  agent.approve();
+  const approved = runs[0].snapshot;
+  store.applyModel({ modelId: "scenic", detail: 2 });
+  store.resetModels();
+  assert.equal(agent.getSnapshot().phase, "running");
+  assert.equal(runs[0].cancelled, false);
+  assert.equal(approved.context.model.modelId, "study");
+  assert.equal(approved.context.model.detail, 8);
+  runs[0].publish({ type: "complete" });
+  assert.equal(
+    store.getSnapshot().assets.filter((a) => a.source === "demo").length,
+    1,
+  );
+  agent.setDraft("下一份计划");
+  agent.send();
+  assert.equal(agent.getSnapshot().context.model.modelId, "scenic");
+  assert.equal(agent.getSnapshot().context.model.detail, 5);
 });

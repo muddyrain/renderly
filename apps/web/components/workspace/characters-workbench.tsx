@@ -137,6 +137,9 @@ export function CharactersWorkbench() {
                   </dd>
                 </div>
               </dl>
+              <p className="workspace-meta">
+                氛围参考 · {character.references.length} 张
+              </p>
               {!!character.references.length && (
                 <div className="workspace-mood-strip" aria-label="氛围参考图">
                   {character.references.map((id) => {
