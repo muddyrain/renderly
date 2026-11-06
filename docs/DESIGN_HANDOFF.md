@@ -1,6 +1,6 @@
 # Renderly Design Handoff
 
-## Current workspace — P0.10 B4–B6 Code Review (2026-11-06)
+## Current workspace — P1 project persistence review (2026-11-06)
 
 Graphite Atelier is the selected direction: [visual values and reference](design/VISUAL_DIRECTION_LOCK.md). The shared shell has graphite surfaces, Sage accents, a persistent Demo notice and project context header. Navigation contains Studio, Gallery, Projects, Characters, Models and Settings. Root redirects to Studio.
 
@@ -18,4 +18,6 @@ See [component provenance](design/SHADCN_SOURCE.md), [authorized Aceternity adap
 
 ## Boundaries
 
-Provider credentials stay server-side; model status, messages, plans, artwork and results are labelled Demo. This UI has no authentication, live generation, persistent project data, billing or business SSE. B4–B6 is complete as a local frontend demo and stops at the new PR review. P1 requires separate authorization. Soft navigation keeps drafts and workspace records; refresh resets them. Project context selection is visible in the shared header.
+Provider credentials stay server-side; model status, messages, plans, artwork and results are labelled Demo. Connected mode persists projects through the local Go API; other creative state stays in memory. This UI has no real login, live generation, billing or business SSE. B0–B6 is merged. P1 adds opt-in real project CRUD and stops at its new PR review. Soft navigation keeps drafts and workspace records; refresh resets them. Project context selection is visible in the shared header.
+
+P1 preserves layout/motion and adds pending/error behavior to the existing project forms. Confirmations retain input on failure, block duplicate writes while pending, and restore focus only after a server-confirmed close. The top notice distinguishes persisted projects from temporary creative state; all project selectors share one API source.

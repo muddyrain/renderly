@@ -57,11 +57,11 @@ func TestProbeRoutes(t *testing.T) {
 	if ready.Code != http.StatusServiceUnavailable || readiness.Status != "not_ready" || readiness.Service != "renderly-api" {
 		t.Fatalf("unimplemented dependencies must not report ready: %d %s", ready.Code, ready.Body)
 	}
-	if readiness.Checks["config"] != "ok" || len(readiness.Checks) != 4 {
+	if readiness.Checks["config"] != "ok" || len(readiness.Checks) != 6 {
 		t.Fatalf("unexpected checks: %v", readiness.Checks)
 	}
-	for _, dependency := range []string{"postgres", "redis", "storage"} {
-		if readiness.Checks[dependency] != "not_implemented" {
+	for _, dependency := range []string{"postgres", "migrations", "workspace"} {
+		if readiness.Checks[dependency] != "not_connected" {
 			t.Fatalf("%s check was misrepresented", dependency)
 		}
 	}

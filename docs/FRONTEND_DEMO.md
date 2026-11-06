@@ -1,6 +1,8 @@
-# P0.10 B4–B6 local frontend contract
+# Frontend modes and creative demo contract
 
-Start from the repository root with `pnpm dev`; open `/studio`. The six desktop routes share one in-memory workspace. Soft navigation, Back and Forward preserve workspace records and unsent Studio text. Refresh or a new browser page creates fresh fixtures. No browser storage, provider request, real upload, billing or backend business API is used.
+P1 adds explicit connected project CRUD. Run `pnpm local:setup` then `pnpm dev:connected`; all project selectors share the API list, while the remaining creative state still resets on refresh. API errors never fall back to sample projects. Setup/runtime/production commands and credential boundaries: [PROJECT_DEVELOPMENT.md](PROJECT_DEVELOPMENT.md). API and asynchronous contracts: [PROJECT_API.md](PROJECT_API.md).
+
+The following describes pure Demo and the creative portions that remain local in connected mode. Start from the repository root with `pnpm dev`; open `/studio`. The six desktop routes share one in-memory workspace. Soft navigation, Back and Forward preserve workspace records and unsent Studio text. Refresh or a new browser page creates fresh fixtures. No browser storage, provider request, real upload, billing or backend business API is used.
 
 | Page | Observable behavior |
 |---|---|
@@ -36,6 +38,7 @@ Stop dev before type generation/build; use root pnpm 10.33.0 commands:
 pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm --filter @renderly/web test:studio
 pnpm --filter @renderly/web test:workspace
+pnpm --filter @renderly/web test:projects
 pnpm lint
 pnpm typecheck
 pnpm --filter @renderly/web exec tsc --noEmit --incremental false --noUncheckedSideEffectImports true
@@ -43,4 +46,4 @@ pnpm build
 git diff --check
 ```
 
-Studio (12 cases), workspace domain/lifecycle (16 cases) and strict CSS imports execute in CI; Button type-contract checks remain in typecheck. Local browser evidence lives under ignored `review/P0.10-B4-B6-Frontend-Closeout-2026-11-06/`. PR records actual checks and limitations; a completed frontend demo is not P1 completion. New PR merge requires human review.
+Studio (12 cases), workspace domain/lifecycle (16 cases), project API/synchronization/proxy tests and strict CSS imports execute in CI; Button type-contract checks remain in typecheck. Local browser evidence lives under ignored `review/P0.10-B4-B6-Frontend-Closeout-2026-11-06/`. PR records actual checks and limitations; a completed frontend demo is not P1 completion. New PR merge requires human review.

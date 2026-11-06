@@ -8,9 +8,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-func registerRoutes(h *server.Hertz) {
+func registerRoutes(h *server.Hertz, deps Dependencies) {
 	h.GET("/healthz", health)
-	h.GET("/readyz", readiness)
+	h.GET("/readyz", func(ctx context.Context, c *app.RequestContext) { readiness(ctx, c, deps) })
 }
 
 func health(_ context.Context, c *app.RequestContext) {
@@ -20,21 +20,25 @@ func health(_ context.Context, c *app.RequestContext) {
 	}{Status: "ok", Service: "renderly-api"})
 }
 
-func readiness(_ context.Context, c *app.RequestContext) {
-	// Configuration was validated before startup. Dependency probes will be
-	// wired with their adapters; an open TCP port alone is not application readiness.
-	c.JSON(consts.StatusServiceUnavailable, struct {
+func readiness(ctx context.Context, c *app.RequestContext, deps Dependencies) {
+	// P1 readiness requires live PostgreSQL, migration and workspace checks.
+	// The unconfigured default stays unavailable; future Redis/storage are explicit.
+	checks := map[string]string{"config": "ok", "postgres": "not_connected", "migrations": "not_connected", "workspace": "not_connected", "redis": "not_required_not_connected", "storage": "not_required_not_connected"}
+	if deps.Ready != nil {
+		checks = deps.Ready(ctx)
+	}
+	status, label := 503, "not_ready"
+	if checks["postgres"] == "ok" && checks["migrations"] == "ok" && checks["workspace"] == "ok" {
+		status, label = 200, "ready"
+	}
+	c.Header("Cache-Control", "no-store")
+	c.JSON(status, struct {
 		Status  string            `json:"status"`
 		Service string            `json:"service"`
 		Checks  map[string]string `json:"checks"`
 	}{
-		Status:  "not_ready",
+		Status:  label,
 		Service: "renderly-api",
-		Checks: map[string]string{
-			"config":   "ok",
-			"postgres": "not_implemented",
-			"redis":    "not_implemented",
-			"storage":  "not_implemented",
-		},
+		Checks:  checks,
 	})
 }

@@ -1,9 +1,17 @@
 "use client";
 
+import { useProjectConnection } from "@/components/workspace/workspace-provider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGroup, motion } from "framer-motion";
-import { Box, FolderOpen, Image as ImageIcon, Settings2, Sparkles, Users } from "lucide-react";
+import {
+  Box,
+  FolderOpen,
+  Image as ImageIcon,
+  Settings2,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { workspacePages } from "@/lib/workspace-pages";
@@ -19,6 +27,7 @@ const icons = {
 };
 
 export function Sidebar() {
+  const { connected } = useProjectConnection();
   const pathname = usePathname();
   const reduceMotion = useMotionPreference();
 
@@ -31,19 +40,31 @@ export function Sidebar() {
             const active = page.href === pathname;
 
             return (
-              <Button key={key} asChild variant="navigation" className="workspace-nav-link">
-                <Link href={page.href} aria-current={active ? "page" : undefined}>
-                  {active && (reduceMotion ? (
-                    <span className="workspace-nav-selection" aria-hidden="true" />
-                  ) : (
-                    <motion.span
-                      className="workspace-nav-selection"
-                      layoutId="selection"
-                      initial={false}
-                      transition={{ duration: 0.16, ease: "easeOut" }}
-                      aria-hidden="true"
-                    />
-                  ))}
+              <Button
+                key={key}
+                asChild
+                variant="navigation"
+                className="workspace-nav-link"
+              >
+                <Link
+                  href={page.href}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {active &&
+                    (reduceMotion ? (
+                      <span
+                        className="workspace-nav-selection"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <motion.span
+                        className="workspace-nav-selection"
+                        layoutId="selection"
+                        initial={false}
+                        transition={{ duration: 0.16, ease: "easeOut" }}
+                        aria-hidden="true"
+                      />
+                    ))}
                   <Icon aria-hidden="true" />
                   <span>{page.label}</span>
                 </Link>
@@ -54,10 +75,29 @@ export function Sidebar() {
       </LayoutGroup>
       <div className="mt-auto flex flex-col gap-2 border-t border-border pt-4">
         <span className="text-xs text-primary">演示工作区</span>
-        <p className="text-xs text-muted-foreground">本次演示有效。<br />跨页保留，刷新重置。</p>
+        <p className="text-xs text-muted-foreground">
+          {connected ? (
+            <>
+              项目已连接数据库。
+              <br />
+              创作记录刷新重置。
+            </>
+          ) : (
+            <>
+              本次演示有效。
+              <br />
+              跨页保留，刷新重置。
+            </>
+          )}
+        </p>
         {process.env.NODE_ENV === "development" && (
           <nav aria-label="开发对照入口" className="mt-2 flex flex-col gap-1">
-            <Button asChild variant="navigation" size="sm" className="justify-start">
+            <Button
+              asChild
+              variant="navigation"
+              size="sm"
+              className="justify-start"
+            >
               <Link href="/design-system">组件预览</Link>
             </Button>
           </nav>

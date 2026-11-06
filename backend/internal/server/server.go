@@ -24,7 +24,7 @@ type Server struct {
 }
 
 // New validates configuration and registers middleware and routes without listening.
-func New(cfg config.Config, logger *slog.Logger) (*Server, error) {
+func New(cfg config.Config, logger *slog.Logger, dependencies ...Dependencies) (*Server, error) {
 	if err := cfg.Validate(); err != nil {
 		return nil, err
 	}
@@ -44,7 +44,12 @@ func New(cfg config.Config, logger *slog.Logger) (*Server, error) {
 		server.WithDisablePreParseMultipartForm(true),
 	)
 	registerMiddleware(h, cfg, logger)
-	registerRoutes(h)
+	deps := Dependencies{}
+	if len(dependencies) > 0 {
+		deps = dependencies[0]
+	}
+	registerRoutes(h, deps)
+	registerProjects(h, cfg, deps)
 	return &Server{h: h}, nil
 }
 

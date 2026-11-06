@@ -56,23 +56,33 @@ export function ConfirmDialog({
   confirm,
   close,
   focusAfterClose,
+  pending = false,
+  error,
 }: {
   open: boolean;
   title: string;
   description: string;
-  confirm: () => void;
+  confirm: () => void | boolean | Promise<void | boolean>;
   close: () => void;
   focusAfterClose?: () => HTMLElement | null;
+  pending?: boolean;
+  error?: React.ReactNode;
 }) {
   const cancelButton = useRef<HTMLButtonElement>(null);
   return (
     <Dialog
       open={open}
       onOpenChange={(value) => {
-        if (!value) close();
+        if (!value && !pending) close();
       }}
     >
       <DialogContent
+        onEscapeKeyDown={(event) => {
+          if (pending) event.preventDefault();
+        }}
+        onPointerDownOutside={(event) => {
+          if (pending) event.preventDefault();
+        }}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           cancelButton.current?.focus();
@@ -90,17 +100,24 @@ export function ConfirmDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {error}
         <DialogFooter>
-          <Button ref={cancelButton} variant="secondary" onClick={close}>
+          <Button
+            disabled={pending}
+            ref={cancelButton}
+            variant="secondary"
+            onClick={close}
+          >
             取消
           </Button>
           <Button
-            onClick={() => {
-              confirm();
-              close();
+            disabled={pending}
+            onClick={async () => {
+              const result = await confirm();
+              if (result !== false) close();
             }}
           >
-            确认操作
+            {pending ? "正在处理…" : "确认操作"}
           </Button>
         </DialogFooter>
       </DialogContent>

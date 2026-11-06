@@ -2,11 +2,22 @@
   "name": "renderly",
   "private": true,
   "packageManager": "pnpm@10.33.0",
-  "engines": { "node": ">=22", "pnpm": "10.33.0" },
+  "engines": {
+    "node": ">=22",
+    "pnpm": "10.33.0"
+  },
   "scripts": {
     "dev": "pnpm --filter @renderly/web dev",
     "build": "pnpm --filter @renderly/web build",
     "lint": "pnpm --filter @renderly/web lint",
-    "typecheck": "pnpm --filter @renderly/web typecheck"
+    "typecheck": "pnpm --filter @renderly/web typecheck",
+    "local:setup": "node scripts/local.mjs setup",
+    "db:migrate": "node scripts/local.mjs migrate",
+    "db:bootstrap": "node scripts/local.mjs bootstrap",
+    "api:local": "node scripts/local.mjs api",
+    "dev:connected": "node scripts/local.mjs dev",
+    "start:connected": "node scripts/local.mjs start",
+    "web:connected": "node scripts/local.mjs web-dev",
+    "sqlc:generate": "scripts/sqlc.sh generate"
   }
 }

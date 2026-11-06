@@ -48,3 +48,17 @@ func TestValidate(t *testing.T) {
 		})
 	}
 }
+
+func TestLocalIdentityGuard(t *testing.T) {
+	base := Config{APIAddr: "127.0.0.1:8080", WebOrigin: "http://localhost:3000", AppEnv: "development", LocalIdentity: true, DatabaseURL: "postgres://example:example@127.0.0.1:5432/renderly", DevUserID: DevUserID, DevWorkspaceID: DevWorkspaceID}
+	if err := base.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	for _, change := range []func(*Config){func(c *Config) { c.AppEnv = "production" }, func(c *Config) { c.AppEnv = "" }, func(c *Config) { c.APIAddr = ":8080" }, func(c *Config) { c.APIAddr = "0.0.0.0:8080" }, func(c *Config) { c.APIAddr = "localhost:8080" }, func(c *Config) { c.DatabaseURL = "" }, func(c *Config) { c.DatabaseURL = "postgres://u:p@localhost:${POSTGRES_PORT:-5432}/renderly" }, func(c *Config) { c.DevUserID = "bad" }, func(c *Config) { c.LocalIdentityValue = "yes" }} {
+		copy := base
+		change(&copy)
+		if copy.Validate() == nil {
+			t.Fatal("unsafe local identity config accepted")
+		}
+	}
+}

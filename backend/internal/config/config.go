@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"github.com/muddyrain/renderly/backend/internal/project"
 	"net"
 	"net/url"
 	"os"
@@ -9,13 +10,25 @@ import (
 	"strings"
 )
 
+const DevUserID = "11111111-1111-4111-8111-111111111111"
+const DevWorkspaceID = "22222222-2222-4222-8222-222222222222"
+
 type Config struct {
-	APIAddr   string
-	WebOrigin string
+	AppEnv             string
+	DatabaseURL        string
+	LocalIdentity      bool
+	LocalIdentityValue string
+	DevUserID          string
+	DevWorkspaceID     string
+	APIAddr            string
+	WebOrigin          string
 }
 
 func Load() Config {
 	return Config{
+		AppEnv: os.Getenv("APP_ENV"), DatabaseURL: os.Getenv("DATABASE_URL"),
+		LocalIdentity: os.Getenv("RENDERLY_LOCAL_IDENTITY") == "true", LocalIdentityValue: os.Getenv("RENDERLY_LOCAL_IDENTITY"),
+		DevUserID: get("DEV_USER_ID", DevUserID), DevWorkspaceID: get("DEV_WORKSPACE_ID", DevWorkspaceID),
 		APIAddr:   get("API_ADDR", ":8080"),
 		WebOrigin: get("WEB_ORIGIN", "http://localhost:3000"),
 	}
@@ -41,6 +54,24 @@ func (c Config) Validate() error {
 		n, err := strconv.Atoi(port)
 		if err != nil || n < 1 || n > 65535 {
 			return errors.New("WEB_ORIGIN port must be between 1 and 65535")
+		}
+	}
+	if c.LocalIdentityValue != "" && c.LocalIdentityValue != "true" && c.LocalIdentityValue != "false" {
+		return errors.New("RENDERLY_LOCAL_IDENTITY must be true or false")
+	}
+	if c.DatabaseURL != "" {
+		db, err := url.Parse(c.DatabaseURL)
+		if err != nil || (db.Scheme != "postgres" && db.Scheme != "postgresql") || db.Hostname() == "" || db.Path == "" || strings.Contains(c.DatabaseURL, "${") {
+			return errors.New("DATABASE_URL must be a literal PostgreSQL URL")
+		}
+	}
+	if c.LocalIdentity {
+		ip := net.ParseIP(host)
+		if (c.AppEnv != "development" && c.AppEnv != "test") || ip == nil || !ip.IsLoopback() {
+			return errors.New("local identity requires explicit development/test and loopback API_ADDR")
+		}
+		if c.DatabaseURL == "" || !project.ValidID(c.DevUserID) || !project.ValidID(c.DevWorkspaceID) {
+			return errors.New("local identity requires database and valid configured IDs")
 		}
 	}
 	return nil

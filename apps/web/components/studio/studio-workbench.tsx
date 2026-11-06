@@ -1,5 +1,6 @@
 "use client";
 
+import { useProjectConnection } from "@/components/workspace/workspace-provider";
 import { useRef, useState } from "react";
 import { AgentPanel } from "./agent-panel";
 import { CanvasPanel } from "./canvas-panel";
@@ -17,6 +18,7 @@ import {
 
 export function StudioWorkbench() {
   const { state, agent } = useDemoAgent();
+  const { connected } = useProjectConnection();
   const composer = useRef<HTMLTextAreaElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   const resetConfirmed = useRef(false);
@@ -83,7 +85,10 @@ export function StudioWorkbench() {
               {resetMode ? "载入预置示例？" : "开始新会话？"}
             </DialogTitle>
             <DialogDescription>
-              当前草稿、对话、引用和选择将清空；正在运行的演示会取消。Gallery、项目、角色和偏好会保留到刷新。
+              当前草稿、对话、引用和选择将清空；正在运行的演示会取消。
+              {connected
+                ? "项目仍在数据库；Gallery、角色与偏好刷新重置。"
+                : "Gallery、项目、角色和偏好会保留到刷新。"}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

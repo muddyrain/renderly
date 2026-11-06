@@ -1,7 +1,8 @@
 FROM golang:1.23-alpine AS build
 WORKDIR /src
 COPY backend/go.mod backend/go.sum ./
-RUN go mod download
+ARG GOPROXY=https://proxy.golang.org,direct
+RUN GOPROXY=${GOPROXY} go mod download
 COPY backend/ ./
 ARG APP_TARGET=api
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/renderly ./cmd/${APP_TARGET}
