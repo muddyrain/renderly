@@ -1,0 +1,47 @@
+/* Graphite Atelier. Scoped during B1; see docs/design/VISUAL_DIRECTION_LOCK.md. */
+.renderly-theme {
+  color-scheme: dark;
+  --background: 21 23 25;
+  --navigation: 27 30 32;
+  --surface: 32 36 39;
+  --canvas: 16 18 20;
+  --foreground: 236 238 235;
+  --muted-foreground: 169 176 176;
+  --border: 52 57 60;
+  --primary: 174 194 167;
+  --primary-foreground: 24 32 25;
+  --selection: 48 59 48;
+  --focus-ring: 197 215 190;
+  --success-foreground: 169 202 176;
+  --warning-foreground: 221 195 145;
+  --destructive-foreground: 228 166 162;
+  --overlay: 0 0 0;
+  --radius-control: 6px;
+  --radius-dialog: 8px;
+  --duration-ui: 160ms;
+  --duration-overlay: 140ms;
+  color: rgb(var(--foreground));
+  font-family: system-ui, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.renderly-theme .preview-overlay[data-state="open"],
+.renderly-theme .preview-dialog[data-state="open"],
+.renderly-theme.preview-tooltip[data-state="delayed-open"],
+.renderly-theme.preview-tooltip[data-state="instant-open"] {
+  animation: preview-fade-in var(--duration-overlay) ease-out;
+}
+
+@keyframes preview-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .renderly-theme *,
+  .renderly-theme.preview-tooltip {
+    animation: none !important;
+    transition: none !important;
+  }
+}

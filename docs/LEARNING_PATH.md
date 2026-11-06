@@ -5,7 +5,7 @@
 - Start frontend commands at the repository root: `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm typecheck`.
 - Use `backend` for Go Modules commands. API and Worker are independent executables, sharing application packages only when required.
 - Read ADR-002 before changing HTTP lifecycle, readiness, networking, SSE or uploads.
-- Read the UI source inventory, DESIGN_HANDOFF and MOTION_SPEC before changing the Studio.
+- Read DESIGN_HANDOFF and MOTION_SPEC before changing Studio layout or motion.
 
 ## What the current milestone establishes
 
@@ -25,4 +25,4 @@ Start the Studio, submit one local demo, cancel it, then start a new session. In
 4. Implement project creation/listing and replace the corresponding demo UI data.
 5. Add integration tests for ownership, validation and persistence failures.
 
-Conversations, agent plans, approval, provider adapters, durable tasks, Worker execution and asset storage follow as separate reviewed milestones. P0.7–P0.9 does not start these steps.
+Conversations, agent plans, approval, provider adapters, durable tasks, Worker execution and asset storage follow as separate reviewed milestones. B3.1 does not start these backend steps.

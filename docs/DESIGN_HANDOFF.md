@@ -1,23 +1,21 @@
 # Renderly Design Handoff
 
-## Product-first layout
-Renderly opens directly into Studio. The primary screen is an AI image creation workspace, not a marketing landing page.
+## Current workspace — P0.10 B3.1 Code Review (2026-11-06)
 
-- Left: workspace navigation and recent projects.
-- Center-left: Creative Agent conversation, structured plan, run state, prompt composer.
-- Right: large image canvas, variants, image actions, metadata.
-- Top: search, usage, notifications and profile.
+Graphite Atelier is the selected direction: [visual values and reference](design/VISUAL_DIRECTION_LOCK.md). The shared shell has graphite surfaces, Sage accents, a persistent Demo notice and project context header. Navigation contains Studio, Gallery, Projects, Characters, Models and Settings. Root redirects to Studio.
 
-## Visual system
-- Dark indigo/graphite base.
-- Violet/lavender as primary accent.
-- Ambient gradients remain subtle and behind the work surface.
-- Thin borders and translucent surfaces; avoid excessive glass effects.
-- Artwork is the visual focal point.
-- Desktop-first. Mobile layouts are intentionally not included.
+Studio alone has a 352px left Creative Agent and a large right canvas. Conversation, editable Brief and three-step Plan use internal scrolling; approval/cancel and Composer remain fixed and reachable at 1280×720. A visible “查看计划 · 3 步” shortcut opens and scrolls to the same Plan. It shares expansion state and aria-controls with the Plan header; it is an optional shortcut, not a gate before approval. Keep 14px body/input text and 12px metadata.
 
-## Screens included
-Studio, Gallery, Projects, Characters, Models, Settings.
+Canvas/Variants are real Radix tabs; parameters, zoom, local image variants/versions and reference continuation are connected to page-local Demo state. New session is empty; default content is labelled preset and pending approval. Nothing is generated, uploaded or saved by a provider. Other five pages remain B2 skeletons.
 
-## Current limitations
-This is a frontend visual prototype. Sample content, agent messages, model status and progress are local demo data. It does not include authentication, backend persistence, live image generation, provider credential storage, billing, or SSE.
+## Components and assets
+
+Five shadcn primitives, scoped RGB tokens and the development-only /design-system remain consumed. The preview uses disabled navigation samples; formal navigation lives in the workspace. Production returns 404 for the preview. Root globals contain Tailwind and a document reset; workspace/studio/preview rules remain scoped.
+
+The favicon uses the existing vector R with graphite fill and Sage foreground/border, including contrast at the icon edge on dark/light tab backgrounds. No remote logo or raster is added.
+
+See [component provenance](design/SHADCN_SOURCE.md), [authorized Aceternity adaptation](design/ACETERNITY_SOURCE.md), [sample photos](design/DEMO_ASSETS.md) and [motion contract](MOTION_SPEC.md). Preserve their license and source records. Desktop targets are 1280×720, 1440×900 and 1920×1080. There is no mobile design requirement in this milestone.
+
+## Boundaries
+
+Provider credentials stay server-side; model status, messages, plans, artwork and results are labelled Demo. This UI has no authentication, live generation, persistent project data, billing or business SSE. B3.1 stops at Code Review; B4 and P1 require separate authorization.

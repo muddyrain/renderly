@@ -1,2 +1,5 @@
-import RenderlyStudio from "@/components/renderly-studio";
-export default function Page() { return <RenderlyStudio />; }
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/studio");
+}
