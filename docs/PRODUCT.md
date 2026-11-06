@@ -16,8 +16,9 @@ The product combines AI Agent + Image Generation + Visual Workspace. The primary
 
 ## Current prototype
 
-The PC-first frontend includes Studio, Gallery, Projects, Characters, Models and Settings. Agent conversation, plans, progress, images, model status and usage are explicitly demo data. Reference uploads, image actions and settings show local feedback; they do not execute provider calls or save credentials. There is no authentication or business persistence yet.
+The PC-first frontend connects Studio, Gallery, Projects, Characters, Models and Settings through one browser-memory workspace. Projects and character reference sheets support local CRUD. Approved Studio demos add one preset-photo record to Gallery, with frozen project, Brief, model configuration and artwork selection. Gallery supports combined filters, favorites, version/variant comparison, local sample download and one-shot continuation into Studio. Models and Settings have real local consumers.
 
+All conversations, plans, progress, model capabilities and results are explicitly local demos. Soft navigation retains workspace data and unsent text; refreshing restores fixtures. There is no authentication, upload, live provider, business API call, billing or persistent storage. A downloaded sample is the original local JPEG, never a generated result. See [frontend contract](FRONTEND_DEMO.md).
 The Go API currently provides health and honest readiness responses. Worker and infrastructure exist separately. Readiness is not claimed until real dependency probes are wired.
 
 ## MVP journey
@@ -34,6 +35,6 @@ Projects, conversations, plans, approvals, generation and assets will be integra
 
 P0.7–P0.9 does not implement live Agent Runtime, image generation, billing, multi-agent collaboration or mobile design. Video, a marketplace, social feed, node editing and model training remain outside the MVP.
 
-## Next acceptance target
+## P1 — requires separate authorization
 
 After human confirmation, create and list a project in the UI using Go APIs backed by PostgreSQL. Ownership, validation and error handling must have tests before replacing demo data in that flow.

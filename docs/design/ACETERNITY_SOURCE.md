@@ -33,4 +33,4 @@
 
 新增唯一直接运行时依赖 `@radix-ui/react-tabs` 精确 `1.2.1`，用于可访问标签语义；锁解析新增 5 个 Radix 包。React 19 peer 经严格安装核查。shadcn Button、Dialog 和原有焦点样式继续消费；不引入另一套状态按钮或内部假成功计时器。
 
-生命周期由本地 DemoAgent 的显式批准快照驱动，动效不决定成功。B4 Gallery 动效仍只是计划，未进入开发。
+生命周期由本地 DemoAgent 的显式批准快照驱动，动效不决定成功。B4 Gallery 使用本地 framer-motion layout、Radix Dialog 和原生 range 比较，没有新增上游源码；不将其标成 Aceternity/Inspira 移植。既有 Canvas Tabs 来源和 MIT 许可保持不变。

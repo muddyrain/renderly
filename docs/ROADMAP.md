@@ -34,17 +34,17 @@ The current frontend is a demo prototype, not a live generation workflow. The AP
 
 Business implementation waits for the maintainer's confirmation at the current Code Review checkpoint.
 
-## Current frontend — P0.10 B3.1 Code Review
+## Current frontend — P0.10 B4–B6 Code Review
 
-- [x] B0/B1: Graphite/Sage tokens, five compatible shadcn primitives and development component preview
-- [x] B2: six real routes, shared workspace, CSS side-effect typing and live navigation feedback; maintainer accepted
-- [x] B3: local Studio conversation, Brief/revision approval, cancellation/retry/isolation, offline artwork and MIT-authorized motion adaptation; independent engineering review passed
-- [x] B3.1: remove unused implementation/package provenance and redundant lock; keep current design system, photos and license records
-- [x] B3.1: unify vector favicon, isolate Plan reduced-motion boundary and add visible low-height Plan shortcut
-- [ ] Maintainer B3.1 Code Review and visual acceptance
-- [ ] B4 Gallery and further frontend features: separately authorize
-- [ ] P1 providers, durable backend tasks and persistence: separately authorize
+- [x] B0/B1: compatible shadcn controls, Graphite/Sage tokens and development preview
+- [x] B2: six routes, shared shell, CSS side-effect typing and navigation feedback
+- [x] B3/B3.1: guarded local Studio, offline photos, authorized Inspira MIT Tabs, legacy cleanup and unified favicon
+- [x] PR #1 merged at reviewed HEAD `81b73a540b655fc488f9fb399dc4148f656ea6ed`; merge `1ea0920bcc44b426ca775a6035daeea682ca6a37`
+- [x] B4: Gallery grid, combined filters/favorites, detail, version/variant selection, keyboard comparison, sample download and Studio continuation
+- [x] B5: local projects/characters CRUD, model configuration and workspace preferences with consumers
+- [x] B6: single in-memory workspace, immutable approved snapshots, once-only Gallery completion, route cancellation and one-shot reference intents
+- [x] Workspace lifecycle tests and strict CSS checks wired into CI; desktop/browser evidence retained locally
+- [ ] Maintainer review of the B4–B6 PR; do not merge automatically
+- [ ] P1: real providers, durable tasks and persistence — separately authorize
 
-Local evidence is in review/P0.10-B3.1-Cleanup-2026-11-06/. B3 start-relative and HEAD-relative patches include deletions and binary differences. Earlier review ZIPs remain local evidence; current docs and runtime sources describe only the maintained workspace. No Git publication is part of this checkpoint.
-
-System IME, editor TypeScript service, other browsers and real screen-reader verification are not implied by Chromium or CLI checks. Real generation, saving, business task events and provider access remain unconnected.
+Frontend completion is an integrated local demo, not completion of the MVP backend. Current behavior and reproducible empty fixtures: [FRONTEND_DEMO.md](FRONTEND_DEMO.md). Evidence remains excluded from Git under review/P0.10-B4-B6-Frontend-Closeout-2026-11-06/. System IME, editor TS service, Safari/Firefox and real screen readers require actual separate runs; Chromium simulation does not establish those results.

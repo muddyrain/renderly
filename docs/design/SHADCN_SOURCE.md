@@ -60,3 +60,7 @@ Radix 的 `@types/react` / `@types/react-dom` peer 为 `*`（Slot 只有 React �
 本次执行带 `--strict-peer-dependencies` 的精确依赖安装及 frozen install，后续 lint、typecheck、build 与浏览器交互以本轮 `review/P0.10-B0-B1-2026-11-06/TEST_RESULTS.md` 为准。官方声明只能说明兼容路线，不能代替仓库实际运行结果。
 
 参考：[官方 Tailwind v4 迁移说明（保留 v3 路线）](https://ui.shadcn.com/docs/tailwind-v4)、[官方 React 19 说明](https://ui.shadcn.com/docs/react-19)、[v3 组件文档](https://v3.shadcn.com/docs/components/dialog)、[tailwind-merge v2.6.1](https://github.com/dcastil/tailwind-merge/tree/v2.6.1)、[Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog)、[Radix Tooltip](https://www.radix-ui.com/primitives/docs/components/tooltip)。
+
+## B4–B6 本地适配补充
+
+Dialog/Tooltip 继续保留同一来源与许可；门户容器携带应用/系统联合 reduced-motion 状态。Dialog 记录打开前焦点，受控表单与嵌套删除确认可明确指定返回位置；删除触发控件后回到当前页搜索入口。没有重新运行 CLI 覆盖组件，没有新增 shadcn 依赖。

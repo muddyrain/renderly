@@ -2,7 +2,7 @@
 
 **An open-source, agent-powered visual creation platform.**
 
-Renderly combines an AI Agent, image generation and a visual workspace. The repository currently contains a PC-first workspace with a local Demo Studio and five navigable page skeletons and a Go HTTP foundation. No live Agent, image provider or persistence is connected. The development-only design system preview remains available for component review.
+Renderly combines an AI Agent, image generation and a visual workspace. The repository currently contains a PC-first workspace with six connected local-demo pages and a Go HTTP foundation. No live Agent, image provider or persistence is connected. The development-only design system preview remains available for component review.
 
 ## Stack and boundaries
 
@@ -25,9 +25,9 @@ pnpm dev
 
 Open `http://localhost:3000`. Root scripts also provide `pnpm build`, `pnpm lint` and `pnpm typecheck`.
 
-The root path redirects to `/studio`. `/studio`, `/gallery`, `/projects`, `/characters`, `/models` and `/settings` are real routes with shared graphite/sage navigation and a persistent Demo notice. Only Studio contains the Agent / Canvas split. Studio supports a local conversation / Brief / approval / cancel / retry workflow and offline sample artwork. The other five routes remain unconnected skeletons.
+The root path redirects to `/studio`. `/studio`, `/gallery`, `/projects`, `/characters`, `/models` and `/settings` are real routes with shared graphite/sage navigation and a persistent Demo notice. Only Studio contains the Agent / Canvas split. Studio supports a local conversation / Brief / approval / cancel / retry workflow and offline sample artwork. Gallery, Projects, Characters, Models and Settings share browser-memory records with Studio. Soft navigation preserves unsent drafts and workspace changes; refresh restores fixtures. See [the frontend demo contract](docs/FRONTEND_DEMO.md).
 
-Development reference: [design system preview](http://localhost:3000/design-system). Run `pnpm dev` from the root; this route returns 404 in production. The B1 source and components remain intact. See [the compatibility record](docs/design/SHADCN_SOURCE.md), [visual lock](docs/design/VISUAL_DIRECTION_LOCK.md) and [Aceternity motion plan](docs/design/ACETERNITY_MOTION_PLAN.md). B2 is accepted; B3.1 cleanup and Studio closeout stop at maintainer Code Review.
+Development reference: [design system preview](http://localhost:3000/design-system). Run `pnpm dev` from the root; this route returns 404 in production. The B1 source and components remain intact. See [the compatibility record](docs/design/SHADCN_SOURCE.md), [visual lock](docs/design/VISUAL_DIRECTION_LOCK.md) and [Aceternity motion plan](docs/design/ACETERNITY_MOTION_PLAN.md). B0–B3.1 is merged; B4–B6 stops at the new PR review.
 
 Start infrastructure without replacing an existing environment file:
 
@@ -77,7 +77,7 @@ The root `pnpm-lock.yaml` is the only workspace lock. CI and the web Dockerfile 
 
 The six workspace routes support direct access, refresh, Next Link navigation and browser history. Navigation active state and breadcrumb come from the pathname. Gallery, Projects and Characters show unconnected empty states; Models and Settings show read-only connection/preference information. Studio approval runs only a deterministic local demonstration; no credentials, model requests, upload or save operations are connected.
 
-The new workspace uses restrained 160ms navigation selection and page entry feedback, with live reduced-motion support. Studio Canvas / Variants consumes a React adaptation of the authorized Inspira MIT port of Aceternity Tabs; see [source and license](docs/design/ACETERNITY_SOURCE.md). B4 remains planned. shadcn / Radix continue to own basic component semantics and overlays.
+The new workspace uses restrained 160ms navigation selection and page entry feedback, with live reduced-motion support. Studio Canvas / Variants consumes a React adaptation of the authorized Inspira MIT port of Aceternity Tabs; see [source and license](docs/design/ACETERNITY_SOURCE.md). Gallery now uses local layout feedback, Radix detail and a native keyboard comparison range; no extra upstream component source is copied. shadcn / Radix continue to own basic component semantics and overlays.
 
 Studio starts with a labelled preset conversation, editable Brief, pending plan and sample image. New session clears all local state; it does not implicitly reload samples. Enter inserts a newline; Ctrl/Cmd+Enter sends after composition input ends, with a 4000-character limit that preserves over-limit text. Sending prepares a plan; explicit approval locks its revision. Cancellation, failure, reset and navigation invalidate old callbacks. Retry requires review and approval again. A fixed “查看计划 · 3 步” shortcut reveals the single Plan before approval, including on low-height displays. Refresh resets to the preset; nothing is persisted.
 
@@ -90,6 +90,7 @@ Stop the development server before type generation or production builds; run the
 ```bash
 pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm --filter @renderly/web test:studio
+pnpm --filter @renderly/web test:workspace
 pnpm build
 pnpm lint
 pnpm typecheck
@@ -104,4 +105,4 @@ go build ./cmd/worker
 
 Hertz remains confined to HTTP transport. The API uses the Go standard network transporter and a 10-second shutdown budget. The independent Worker currently waits for termination signals; no queue consumer is wired. See [Architecture](docs/ARCHITECTURE.md), [ADR-002](docs/DECISIONS/0002-adopt-hertz.md), [Product](docs/PRODUCT.md) and [Roadmap](docs/ROADMAP.md).
 
-The current milestone is P0.10 B3.1 cleanup and Studio Code Review. B4 Gallery and later Project CRUD integration require separate authorization. Agent Runtime, paid image generation and SSE business events are not part of this milestone. License: MIT.
+The current milestone is P0.10 B4–B6 frontend closeout and PR review. Local Project CRUD is included; real backend integration requires separate P1 authorization. Agent Runtime, paid image generation and SSE business events are not part of this milestone. License: MIT.

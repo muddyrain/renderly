@@ -2,11 +2,17 @@
 
 日期：2026-11-06。维护者已指定 [Aceternity UI](https://ui.aceternity.com/components) 为后续动效来源，与现有 shadcn / Radix 配合。此计划保留 Graphite Atelier、Tailwind 3 与 `framer-motion`；不购买 Pro。
 
-## 当前 Studio 实施（B3.1 待 Code Review）
+## 当前 B4–B6 实施
+
+Gallery 已接通筛选、收藏、详情、版本/变体与键盘比较。网格按稳定资产 ID 使用现有 framer-motion 的 160ms layout 重排；详情继续使用 shadcn/Radix Dialog，比较为本地原生 range + 图片裁剪。没有复制额外 Aceternity/Inspira 组件；没有以本地比较实现冒充上游移植。Canvas Tabs 继续消费下述已授权 MIT 来源，原始许可与 hashes 保留。
+
+应用“减少动效”与系统 reduce 取并集；静态时不挂 Gallery layout 动画，门户弹层同时携带实际动效属性。没有新运行时依赖，没有升级 Tailwind/Next/React。批准和结果归属由共享本地状态驱动，不由动效完成回调决定。
+
+## Studio 既有实施（PR #1 已合并）
 
 维护者已接受 Aceternity → Inspira UI MIT → Renderly 的移植链。Canvas/Variants 实际消费 Animated Tabs 的受控选中态与 shared layout 背景；Radix Tabs 负责真实面板、焦点和键盘。固定 commit、原文件 hashes、许可证和逐项改写记录见 [ACETERNITY_SOURCE.md](ACETERNITY_SOURCE.md)。保留石墨灰、Tailwind 3 和现有 framer-motion；不引入 motion/motion-v。
 
-消息 160ms opacity/4px；Plan 160ms 高度/opacity；图片就绪后 200ms crossfade；Dialog 沿用基础合同。实时 reduced-motion 移除上述移动/渐变。没有沿用来源中的卡片堆叠、3D、bounce 或内部假成功状态。实际运行结果由 DemoAgent 批准快照控制。B3.1 将 Plan 静态分支移出 AnimatePresence，实时偏好切换不保留旧退出列表；固定计划入口复用同一展开状态。B4 Gallery 的筛选/详情/比较仍未实现。
+消息 160ms opacity/4px；Plan 160ms 高度/opacity；图片就绪后 200ms crossfade；Dialog 沿用基础合同。实时 reduced-motion 移除上述移动/渐变。没有沿用来源中的卡片堆叠、3D、bounce 或内部假成功状态。实际运行结果由 DemoAgent 批准快照控制。B3.1 将 Plan 静态分支移出 AnimatePresence，实时偏好切换不保留旧退出列表；固定计划入口复用同一展开状态。B4 的实际实现与来源边界以上述当前记录为准。
 
 ## 历史 B2 实施
 
@@ -23,7 +29,7 @@ React `useSyncExternalStore` 订阅浏览器 reduced-motion 媒体查询；启�
 | B3 Studio | 消息进入；Brief / Plan 展开、折叠和状态变化；按钮状态过渡；结果 180–240ms crossfade | 考察 [Stateful Button](https://ui.aceternity.com/components/stateful-button)、[Tabs](https://ui.aceternity.com/components/tabs) 的状态组织；保留 shadcn Button 和 Radix 的语义。计划审批、执行与结果状态先建模，再绑定动画。 |
 | B4 Gallery | 筛选重排、作品详情展开、版本/前后图比较 | 考察 [Layout Grid](https://ui.aceternity.com/components/layout-grid)、[Compare](https://ui.aceternity.com/components/compare)。保留图片原始颜色、比例和用户控制；比较组件须补足键盘语义，不默认带入 Sparkles 装饰。 |
 
-此表记录 B2 时的候选目标；B3 当前实施以上述实际来源记录为准，B4 尚未授权。B2 的空状态不是 Gallery 动效或 Studio 创作流程的完成品。
+此表记录 B2 时的候选目标；B3 当前实施以上述实际来源记录为准，B4 已由本轮连续任务授权并完成本地实现。B2 的空状态不是 Gallery 动效或 Studio 创作流程的完成品。
 
 ## 采用组件时的边界
 
