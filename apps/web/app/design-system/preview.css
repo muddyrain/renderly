@@ -1,0 +1,121 @@
+.preview-workspace {
+  display: grid;
+  grid-template-rows: 32px 56px minmax(0, 1fr);
+  height: 100dvh;
+  overflow: hidden;
+  background: rgb(var(--background));
+}
+
+.preview-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-bottom: 1px solid rgb(var(--border));
+  background: rgb(var(--surface));
+  color: rgb(var(--muted-foreground));
+  font-size: 12px;
+}
+
+.preview-notice strong {
+  color: rgb(var(--primary));
+  font-weight: 600;
+}
+
+.preview-project-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.preview-columns {
+  display: grid;
+  grid-template-columns: 184px 352px minmax(0, 1fr);
+  min-height: 0;
+}
+
+.preview-sidebar {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  padding: 24px 12px;
+  border-right: 1px solid rgb(var(--border));
+  background: rgb(var(--navigation));
+}
+
+.preview-sidebar button {
+  height: 40px;
+}
+
+.preview-sidebar button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.preview-agent,
+.preview-canvas {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.preview-agent {
+  border-right: 1px solid rgb(var(--border));
+  background: rgb(var(--surface));
+}
+
+.preview-canvas {
+  background: rgb(var(--canvas));
+}
+
+.preview-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 24px;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.preview-panel-scroll {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgb(var(--border)) transparent;
+  scrollbar-gutter: stable;
+  padding: 24px;
+}
+
+.preview-specimen {
+  display: flex;
+  max-width: 1120px;
+  flex-direction: column;
+  gap: 32px;
+  margin: 0 auto;
+}
+
+.preview-specimen-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(var(--border));
+}
+
+.preview-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.preview-error-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}

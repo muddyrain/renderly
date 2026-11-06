@@ -28,6 +28,6 @@ Architecture boundaries:
 Frontend and workspace boundaries:
 - Use root pnpm Workspace commands for JavaScript/TypeScript; keep Go Modules independent in `backend`.
 - Keep page-specific components in `apps/web`; extract shared packages only for real consumers. Do not add Turborepo in the current foundation.
-- Read `docs/design/UI_PACKAGE_V0.2.0_FILES.md`, `docs/DESIGN_HANDOFF.md` and `docs/MOTION_SPEC.md` before changing the v0.2.0 Studio.
+- Before changing Studio layout or motion, read `docs/DESIGN_HANDOFF.md` and `docs/MOTION_SPEC.md`; preserve component and asset provenance in their linked source records.
 - Label demo Agent replies, plans, progress, artwork, provider status and usage. Provider keys remain server-side; demo completion is not a real task result.
 - Keep historical ADRs and review evidence intact. `review/` is local evidence, excluded from Git and Docker contexts.

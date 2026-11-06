@@ -34,17 +34,17 @@ The current frontend is a demo prototype, not a live generation workflow. The AP
 
 Business implementation waits for the maintainer's confirmation at the current Code Review checkpoint.
 
-## P0.7–P0.9 — Workspace and Studio integration
+## Current frontend — P0.10 B3.1 Code Review
 
-- [x] Confirm the existing v0.2.0 UI source and capture its file inventory
-- [x] Establish root pnpm Workspace with independent Go Modules
-- [x] Keep one real web package; defer empty shared packages and Turborepo
-- [x] Integrate Studio, Gallery, Projects, Characters, Models and Settings
-- [x] Label demo behavior and cover completion/cancellation/session-reset states
-- [x] Align root scripts, Makefile, GitHub Actions and frontend Dockerfile
-- [x] Frontend build, lint, strict typecheck and frozen-lockfile installation
-- [x] Go tests/vet/builds and Compose configuration check
-- [x] Complete final browser, source-preservation and Git publication checks
-- [ ] Human confirmation before P1
+- [x] B0/B1: Graphite/Sage tokens, five compatible shadcn primitives and development component preview
+- [x] B2: six real routes, shared workspace, CSS side-effect typing and live navigation feedback; maintainer accepted
+- [x] B3: local Studio conversation, Brief/revision approval, cancellation/retry/isolation, offline artwork and MIT-authorized motion adaptation; independent engineering review passed
+- [x] B3.1: remove unused implementation/package provenance and redundant lock; keep current design system, photos and license records
+- [x] B3.1: unify vector favicon, isolate Plan reduced-motion boundary and add visible low-height Plan shortcut
+- [ ] Maintainer B3.1 Code Review and visual acceptance
+- [ ] B4 Gallery and further frontend features: separately authorize
+- [ ] P1 providers, durable backend tasks and persistence: separately authorize
 
-P0.6 backend source, module versions and historical decisions are retained. No live Agent Runtime, paid image API, Project CRUD or other P1 business implementation is included. Git publication uses separate reviewed backend and Workspace/UI commits.
+Local evidence is in review/P0.10-B3.1-Cleanup-2026-11-06/. B3 start-relative and HEAD-relative patches include deletions and binary differences. Earlier review ZIPs remain local evidence; current docs and runtime sources describe only the maintained workspace. No Git publication is part of this checkpoint.
+
+System IME, editor TypeScript service, other browsers and real screen-reader verification are not implied by Chromium or CLI checks. Real generation, saving, business task events and provider access remain unconnected.

@@ -55,14 +55,20 @@ SIGINT/SIGTERM initiate a drain bounded to 10 seconds. The main process waits fo
 
 [ADR-002](DECISIONS/0002-adopt-hertz.md) records the framework decision, network deployment constraints, and the verification plan for Agent Run/Task SSE and uploads. These features require separate implementation and acceptance. The current `/readyz` placeholder must be replaced with bounded adapter probes before using it for deployment gating.
 
-## Monorepo and frontend integration (P0.7–P0.9)
+## Frontend workspace
 
-The root pnpm Workspace discovers `apps/*` and `packages/*`. Only `apps/web` currently exists as an application package (`@renderly/web`); no empty shared packages or Turborepo have been introduced. Go Modules remain wholly under `backend` and are not represented as a JavaScript package.
+The root pnpm Workspace discovers apps/* and packages/*. The sole app is @renderly/web under apps/web. Page-specific components stay there; there are no empty shared packages, Turborepo, extra services or shared Agent framework. The root lock is authoritative for local installs, CI and Docker. Go Modules remain independent under backend. Typechecking runs next typegen then tsc --noEmit; stop dev before type generation/build so .next writers are sequential.
 
-The web package contains the PC-first Studio, Gallery, Projects, Characters, Models and Settings views. Framer Motion and CSS implement the design handoff's transitions and interaction feedback, respecting reduced-motion preferences. A page-local sample image component handles loading/error presentation. No HTTP client package is extracted before stable API contracts exist.
+The server workspace layout loads tokens and workspace CSS, composing WorkspaceShell around route children. Sidebar and ProjectHeader use pathname state; lib/workspace-pages.ts defines routes/labels/metadata. Root redirects to /studio. Studio contains one page-local client workbench; the other five formal routes are server-rendered Demo skeletons. /design-system is the sole development component preview, gated with server notFound in production.
 
-All creative interactions are local demos. A persistent banner identifies sample Agent conversation, plans, progress, images and usage. Demo timers are cancellable and cleared for new sessions/unmounting. API health/readiness are independent of these demo states; no provider credentials or live generation calls are wired.
+Root globals provide Tailwind/reset; scoped tokens and workspace/studio/preview styles own appearance. Dialog and Tooltip portals carry the same theme. The global CSS declaration in types/styles.d.ts is included by the existing TypeScript glob; generated next-env and strict checks are preserved. See [shadcn sources](design/SHADCN_SOURCE.md), [design handoff](DESIGN_HANDOFF.md) and [motion contract](MOTION_SPEC.md).
 
-The root lockfile is authoritative for CI, Docker and local workspace installs. Typechecking runs `next typegen` before `tsc --noEmit`, so a clean checkout does not need an earlier build to supply route types. The original nested pnpm lock is preserved only as UI package provenance. The current frontend Dockerfile keeps the workspace directory layout so pnpm dependency links resolve. Full container image builds remain a separate deployment validation from Compose configuration parsing.
+## Local Studio boundary
 
-Next, integrate Project create/list through typed frontend API calls and Go use cases backed by PostgreSQL. Keep actual backend task events separate from demo state; later SSE and upload work follows ADR-002.
+useDemoAgent owns one DemoAgent per mount through useSyncExternalStore. Owned values define idle / awaiting_approval / running / completed / failed / cancelled, along with Brief and asset/version/variant relations. Explicit approval freezes a cloned session/revision/run snapshot. A deterministic adapter publishes bounded timer events; generation token, active flag, session and run checks reject late callbacks. Cancel/reset/terminal events/dispose clear ownership. Failed/cancelled runs require review and explicit reapproval.
+
+New session replaces draft, messages, Brief, errors, result and selections atomically; session-keyed conversation/canvas UI also clears local presentation state. There is no API, provider, upload or persistence integration. The B3.1 fixed Plan shortcut opens the existing list without duplicating state. Reduced-motion renders outside the animated presence boundary so exiting content is not retained.
+
+ImageResource is keyed by source/attempt; it owns load/error/retry and cancels old callbacks on unmount. Local fixtures resolve versions/variants by IDs and remember selections per asset. Exact files, hashes and dimensions are in [DEMO_ASSETS.md](design/DEMO_ASSETS.md). Radix Tabs provides keyboard/ARIA; the [authorized Inspira MIT adaptation](design/ACETERNITY_SOURCE.md) supplies selected-background structure using existing framer-motion.
+
+Node lifecycle tests use the existing TypeScript compiler and a disposable temporary directory. B3.1 preserves B1/B2/B3 functionality and stops at Code Review; backend/SQL/deployment/CI are outside this cleanup.

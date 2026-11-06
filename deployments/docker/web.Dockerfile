@@ -14,5 +14,7 @@ RUN pnpm build
 FROM base AS runtime
 ENV NODE_ENV=production
 COPY --from=build /app ./
+COPY LICENSE ./LICENSE
+COPY docs/design/SHADCN_LICENSE.md docs/design/INSPIRA_LICENSE.md ./licenses/
 EXPOSE 3000
 CMD ["pnpm", "--filter", "@renderly/web", "start"]
