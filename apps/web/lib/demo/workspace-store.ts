@@ -66,7 +66,7 @@ export function comparisonArtwork(asset: WorkspaceAsset) {
   };
 }
 const validName = (name: string) =>
-  name.trim().length > 0 && name.trim().length <= 120;
+  [...name.trim()].length > 0 && [...name.trim()].length <= 120;
 
 /** One browser workspace, intentionally discarded on refresh. No storage or provider IO. */
 export class WorkspaceStore {
@@ -75,14 +75,57 @@ export class WorkspaceStore {
   private sequence = 0;
   private recorded = new Set<string>();
   readonly agent: DemoAgent;
-  constructor(seed = initialWorkspace(), adapter?: DemoAdapter) {
+  constructor(
+    seed = initialWorkspace(),
+    adapter?: DemoAdapter,
+    readonly connected = false,
+  ) {
     this.state = structuredClone(seed);
+    if (connected) {
+      this.state.projects = [];
+      this.state.activeProjectId = null;
+      this.state.assets = this.state.assets.map((a) => ({
+        ...a,
+        projectId: null,
+      }));
+      this.state.characters = this.state.characters.map((c) => ({
+        ...c,
+        projectIds: [],
+      }));
+      this.state.notice =
+        "正在加载数据库项目；创作记录、角色与偏好仍为本地演示。";
+    }
     this.agent = new DemoAgent(adapter, true, {
       context: this.planContext,
       ratio: () => this.state.preferences.ratio,
     });
     this.agent.subscribe(this.recordCompleted);
   }
+  replaceProjects = (
+    projects: import("../../types/workspace").Project[],
+    notice?: string,
+  ) => {
+    const valid = new Set(projects.map((p) => p.id));
+    const oldActive = this.state.activeProjectId;
+    this.update({
+      projects: projects.map((p) => ({ ...p })),
+      activeProjectId: oldActive && valid.has(oldActive) ? oldActive : null,
+      assets: this.state.assets.map((a) =>
+        a.projectId && !valid.has(a.projectId) ? { ...a, projectId: null } : a,
+      ),
+      characters: this.state.characters.map((c) => ({
+        ...c,
+        projectIds: c.projectIds.filter((id) => valid.has(id)),
+      })),
+      notice:
+        notice ??
+        (this.connected
+          ? "项目列表已从本地数据库载入；创作、角色和偏好仍为演示。"
+          : this.state.notice),
+    });
+    if (oldActive && !valid.has(oldActive)) this.agent.refreshContext();
+    for (const p of projects) this.agent.syncProjectName(p.id, p.name);
+  };
   getSnapshot = () => this.state;
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -113,7 +156,8 @@ export class WorkspaceStore {
     };
   };
   createProject(name: string, description: string) {
-    if (!validName(name) || description.length > 1000) return false;
+    if (this.connected) return false;
+    if (!validName(name) || [...description.trim()].length > 1000) return false;
     const id = this.id("project");
     this.announce("项目已创建。", {
       projects: [
@@ -124,9 +168,10 @@ export class WorkspaceStore {
     return id;
   }
   renameProject(id: string, name: string, description: string) {
+    if (this.connected) return false;
     if (
       !validName(name) ||
-      description.length > 1000 ||
+      [...description.trim()].length > 1000 ||
       !this.state.projects.some((p) => p.id === id)
     )
       return false;
@@ -150,6 +195,7 @@ export class WorkspaceStore {
     return true;
   }
   deleteProject(id: string) {
+    if (this.connected) return false;
     if (!this.state.projects.some((p) => p.id === id)) return false;
     const active = this.state.activeProjectId === id;
     this.update({
@@ -379,6 +425,7 @@ export class WorkspaceStore {
   };
   /** Development-only caller and isolated tests; does not preserve a previous fixture. */
   loadFixture(empty: boolean) {
+    if (this.connected) return;
     this.agent.cancel();
     this.update(initialWorkspace(empty));
     this.agent.reset(!empty);

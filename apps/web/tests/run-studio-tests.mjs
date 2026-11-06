@@ -8,21 +8,28 @@ const requestedSuite = process.argv[2];
 if (
   requestedSuite !== undefined &&
   requestedSuite !== "studio" &&
-  requestedSuite !== "workspace"
+  requestedSuite !== "workspace" &&
+  requestedSuite !== "projects"
 ) {
   throw new Error(`Unknown test suite: ${requestedSuite}`);
 }
 const suite = requestedSuite ?? "studio";
 const output = fs.mkdtempSync(path.join(os.tmpdir(), "renderly-studio-tests-"));
 try {
+  const entries =
+    suite === "projects"
+      ? [
+          "lib/projects/project-sync.ts",
+          "lib/server/project-proxy.ts",
+          "lib/demo/workspace-store.ts",
+        ]
+      : [
+          suite === "workspace"
+            ? "lib/demo/workspace-store.ts"
+            : "lib/demo/demo-agent.ts",
+        ];
   const program = ts.createProgram(
-    [
-      path.resolve(
-        suite === "workspace"
-          ? "lib/demo/workspace-store.ts"
-          : "lib/demo/demo-agent.ts",
-      ),
-    ],
+    entries.map((entry) => path.resolve(entry)),
     {
       target: ts.ScriptTarget.ES2020,
       module: ts.ModuleKind.CommonJS,

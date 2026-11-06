@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FolderOpen, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,17 @@ import {
 } from "@/components/ui/dialog";
 import { assetArtwork } from "@/lib/demo/workspace-store";
 import type { Project } from "@/types/workspace";
+import { useProjectConnection } from "./workspace-provider";
+import { validProject } from "@/lib/projects/project-api";
 import { useWorkspace } from "./workspace-provider";
 import { PageFrame, EmptyState, ConfirmDialog } from "./page-frame";
 export function ProjectsWorkbench() {
   const { state, store } = useWorkspace();
+  const {
+    projects: remote,
+    state: connection,
+    connected,
+  } = useProjectConnection();
   const router = useRouter();
   const search = useRef<HTMLInputElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
@@ -31,6 +38,44 @@ export function ProjectsWorkbench() {
   } | null>(null);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<Project | null>(null);
+  useEffect(() => {
+    if (
+      deleting &&
+      remote &&
+      connection.status === "ready" &&
+      !state.projects.some((p) => p.id === deleting.id)
+    )
+      setDeleting(null);
+  }, [deleting, remote, connection.status, state.projects]);
+  const connectionFeedback = (
+    <>
+      {connection.error && (
+        <p role="alert" className="workspace-error">
+          {connection.error}
+        </p>
+      )}
+      {connected &&
+        !connection.pending &&
+        (connection.status === "error" || connection.uncertain) && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => remote?.load()}
+          >
+            重新载入项目
+          </Button>
+        )}
+      {connection.uncertain && connection.status === "ready" && (
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => remote?.acknowledgeUncertain()}
+        >
+          已核对列表，重新编辑
+        </Button>
+      )}
+    </>
+  );
   const open = (project: Project | null, button: HTMLElement) => {
     trigger.current = button;
     setError("");
@@ -53,6 +98,22 @@ export function ProjectsWorkbench() {
         </Button>
       }
     >
+      {connected && (
+        <div className="workspace-callout">
+          项目保存于本地 PostgreSQL；卡片中的作品和角色仅是本次演示。
+          {connection.status === "loading" && (
+            <p role="status">正在载入全部项目分页…</p>
+          )}
+          {connectionFeedback}
+          <Button
+            variant="ghost"
+            disabled={connection.pending || connection.status === "loading"}
+            onClick={() => remote?.load()}
+          >
+            刷新项目列表
+          </Button>
+        </div>
+      )}
       <div className="workspace-toolbar">
         <Input
           ref={search}
@@ -63,11 +124,17 @@ export function ProjectsWorkbench() {
         />
         <span className="workspace-count">{projects.length} 个项目</span>
       </div>
-      {!projects.length ? (
+      {!projects.length &&
+      connection.status !== "loading" &&
+      connection.status !== "error" ? (
         <EmptyState
           title={state.projects.length ? "没有匹配的项目" : "从一个项目开始"}
         >
-          <p>项目组织当前会话中的作品；新建项目最初没有作品。</p>
+          <p>
+            {connected
+              ? "新项目保存至数据库；创作记录仍为本次演示。"
+              : "项目组织当前会话中的作品；新建项目最初没有作品。"}
+          </p>
           <Button
             variant="secondary"
             onClick={(e) =>
@@ -159,10 +226,16 @@ export function ProjectsWorkbench() {
       <Dialog
         open={editor !== null}
         onOpenChange={(value) => {
-          if (!value) setEditor(null);
+          if (!value && !connection.pending) setEditor(null);
         }}
       >
         <DialogContent
+          onEscapeKeyDown={(event) => {
+            if (connection.pending) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (connection.pending) event.preventDefault();
+          }}
           onCloseAutoFocus={(e) => {
             e.preventDefault();
             const target = trigger.current?.isConnected
@@ -181,17 +254,31 @@ export function ProjectsWorkbench() {
             <form
               className="workspace-form"
               noValidate
-              onSubmit={(event) => {
+              onSubmit={async (event) => {
                 event.preventDefault();
-                const ok = editor.id
-                  ? store.renameProject(
-                      editor.id,
-                      editor.name,
-                      editor.description,
-                    )
-                  : store.createProject(editor.name, editor.description);
+                if (connection.pending || connection.uncertain) return;
+                if (!validProject(editor)) {
+                  setError(
+                    "名称需为 1–120 个 Unicode 字符，描述最多 1000 字符。",
+                  );
+                  return;
+                }
+                setError("");
+                const ok = remote
+                  ? await remote.save(editor.id, {
+                      name: editor.name,
+                      description: editor.description,
+                    })
+                  : editor.id
+                    ? store.renameProject(
+                        editor.id,
+                        editor.name,
+                        editor.description,
+                      )
+                    : store.createProject(editor.name, editor.description);
                 if (ok) setEditor(null);
-                else setError("请填写 1–120 字的项目名称，描述最多 1000 字。");
+                else if (!remote)
+                  setError("请填写 1–120 字的项目名称，描述最多 1000 字。");
               }}
             >
               <label htmlFor="project-name">
@@ -200,7 +287,7 @@ export function ProjectsWorkbench() {
                   id="project-name"
                   autoFocus
                   required
-                  maxLength={120}
+                  disabled={connection.pending}
                   value={editor.name}
                   onChange={(e) =>
                     setEditor({ ...editor, name: e.target.value })
@@ -211,7 +298,7 @@ export function ProjectsWorkbench() {
                 项目描述
                 <Textarea
                   id="project-description"
-                  maxLength={1000}
+                  disabled={connection.pending}
                   value={editor.description}
                   onChange={(e) =>
                     setEditor({ ...editor, description: e.target.value })
@@ -223,16 +310,28 @@ export function ProjectsWorkbench() {
                   {error}
                 </p>
               )}
+              {connection.pending && (
+                <p role="status">正在等待服务器确认，请勿重复操作。</p>
+              )}
+              {connected && connectionFeedback}
               <DialogFooter>
                 <Button
                   type="button"
+                  disabled={connection.pending}
                   variant="secondary"
                   onClick={() => setEditor(null)}
                 >
                   取消编辑
                 </Button>
-                <Button type="submit">
-                  {editor.id ? "应用项目" : "创建项目"}
+                <Button
+                  type="submit"
+                  disabled={connection.pending || connection.uncertain}
+                >
+                  {connection.pending
+                    ? "正在保存…"
+                    : editor.id
+                      ? "应用项目"
+                      : "创建项目"}
                 </Button>
               </DialogFooter>
             </form>
@@ -247,9 +346,15 @@ export function ProjectsWorkbench() {
         title="删除项目？"
         description={`“${deleting?.name ?? ""}”的作品将移至未归属；角色资料保留并移除项目关联。若是当前项目，将取消正在运行的演示。`}
         close={() => setDeleting(null)}
-        confirm={() => {
-          if (deleting) store.deleteProject(deleting.id);
-          requestAnimationFrame(() => search.current?.focus());
+        pending={connection.pending}
+        error={connected ? connectionFeedback : undefined}
+        confirm={async () => {
+          if (!deleting) return false;
+          const ok = remote
+            ? await remote.remove(deleting.id)
+            : store.deleteProject(deleting.id);
+          if (ok) requestAnimationFrame(() => search.current?.focus());
+          return ok;
         }}
       />
     </PageFrame>
