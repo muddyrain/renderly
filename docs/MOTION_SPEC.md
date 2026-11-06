@@ -21,7 +21,7 @@ The shared media hook uses useSyncExternalStore with a static server snapshot. S
 
 For Plan, the reduce branch is outside AnimatePresence. Switching preference unmounts the whole animated presence subtree, so an old exit is not retained next to the static list. Expanded content has exactly one studio-plan-details id. Returning to normal mounts presence with initial=false, preserving a stable expanded layout. Ordinary normal-mode opening/closing retains the lightweight transition. The Plan header and fixed shortcut stay outside that subtree, with one shared expanded state; preference changes preserve their focus.
 
-The fixed Plan shortcut scrolls only after explicit activation. Normal expansion finishes before its final reveal; static expansion reveals immediately after render. It never adds a second list or requires completing a reading flow before approval.
+The fixed Plan shortcut scrolls only after explicit activation, including pointer activation that does not focus the button. Normal expansion finishes before its final reveal; static expansion reveals immediately after render. A later pointer, keyboard, wheel or focus action cancels the pending reveal. It never adds a second list or requires completing a reading flow before approval.
 
 ## State and artwork boundaries
 

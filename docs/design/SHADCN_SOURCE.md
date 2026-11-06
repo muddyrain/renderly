@@ -1,5 +1,7 @@
 # shadcn/ui 来源与兼容记录 — P0.10 B0+B1
 
+PR 审阅补充：Button 的 `disabled` 仅用于原生 button；`asChild` 与 `disabled` 的组合由类型 API 拒绝，避免把原生禁用语义误用于链接。类型合同随普通 typecheck 验证。运行镜像在 `/app/licenses/SHADCN_LICENSE.md` 保留完整许可文本，原始来源与版权记录不变。
+
 核对日期：2026-11-06。只消费 Button、Input、Textarea、Dialog、Tooltip；未安装其他组件、表单框架或动画包。
 
 ## 冻结来源

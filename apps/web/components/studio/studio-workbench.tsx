@@ -55,7 +55,8 @@ export function StudioWorkbench() {
           const { image } = selectedArtwork(state);
           if (state.brief)
             agent.applyBrief({ ...state.brief, references: [image.id] });
-          agent.setDraft(`参考预置样图“${image.title}”，我想继续探索：`);
+          if (!state.draft)
+            agent.setDraft(`参考预置样图“${image.title}”，我想继续探索：`);
           requestAnimationFrame(() => composer.current?.focus());
         }}
       />

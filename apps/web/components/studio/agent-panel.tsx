@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Plus, Sparkles, Square, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,8 +41,9 @@ export function AgentPanel({
 }) {
   const scrollArea = useRef<HTMLDivElement>(null);
   const planSection = useRef<HTMLElement>(null);
-  const planShortcut = useRef<HTMLButtonElement>(null);
   const planRevealRequested = useRef(false);
+  const [messageNoticeTarget, setMessageNoticeTarget] =
+    useState<HTMLDivElement | null>(null);
   const reduceMotion = useMotionPreference();
   const cancelButton = useRef<HTMLButtonElement>(null);
   const approveButton = useRef<HTMLButtonElement>(null);
@@ -50,8 +51,23 @@ export function AgentPanel({
   const revealPlan = useCallback(() => {
     if (!planRevealRequested.current) return;
     planRevealRequested.current = false;
-    if (document.activeElement === planShortcut.current)
-      planSection.current?.scrollIntoView({ block: "end" });
+    planSection.current?.scrollIntoView({ block: "end" });
+  }, []);
+  useEffect(() => {
+    const cancelReveal = () => {
+      planRevealRequested.current = false;
+    };
+    const events = ["pointerdown", "keydown", "wheel", "focusin"] as const;
+    events.forEach((name) =>
+      document.addEventListener(name, cancelReveal, {
+        capture: true,
+        passive: true,
+      }),
+    );
+    return () =>
+      events.forEach((name) =>
+        document.removeEventListener(name, cancelReveal, true),
+      );
   }, []);
   useEffect(() => {
     if (reduceMotion && state.planExpanded) revealPlan();
@@ -102,6 +118,7 @@ export function AgentPanel({
           key={state.session}
           messages={state.messages}
           scrollArea={scrollArea}
+          noticeTarget={messageNoticeTarget}
         />
         {state.brief && (
           <BriefEditor
@@ -146,6 +163,7 @@ export function AgentPanel({
         )}
       </div>
       <div className="studio-run-actions">
+        <div ref={setMessageNoticeTarget} className="empty:hidden" />
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs text-muted-foreground">
             {phaseLabels[state.phase]} ·{" "}
@@ -153,7 +171,6 @@ export function AgentPanel({
           </p>
           {state.brief && (
             <Button
-              ref={planShortcut}
               size="sm"
               variant="ghost"
               aria-expanded={state.planExpanded}

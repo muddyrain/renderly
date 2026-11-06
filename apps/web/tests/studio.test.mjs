@@ -151,6 +151,33 @@ test("real demo adapter uses cancellable deterministic clock and dispose silence
   );
 });
 
+test("real adapter completes the approved run and cancels every timer", () => {
+  const jobs = [];
+  const agent = new DemoAgent(
+    createDemoAdapter({
+      schedule(callback) {
+        const job = { callback, cancelled: false };
+        jobs.push(job);
+        return () => {
+          job.cancelled = true;
+        };
+      },
+    }),
+  );
+  agent.approve();
+  const approved = agent.getSnapshot().run;
+  jobs.forEach((job) => job.callback());
+  const state = agent.getSnapshot();
+  assert.equal(state.phase, "completed");
+  assert.equal(state.result.source, "demo");
+  assert.equal(state.result.snapshot, approved);
+  assert.deepEqual(state.steps, ["completed", "completed", "completed"]);
+  assert.equal(
+    jobs.every((job) => job.cancelled),
+    true,
+  );
+});
+
 test("real adapter deterministic failure cancels pending success", () => {
   const jobs = [];
   const agent = new DemoAgent(

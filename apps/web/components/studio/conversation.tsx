@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useMotionPreference } from "@/hooks/use-motion-preference";
@@ -9,9 +10,11 @@ import type { DemoMessage } from "@/types/studio";
 export function Conversation({
   messages,
   scrollArea,
+  noticeTarget,
 }: {
   messages: DemoMessage[];
   scrollArea: React.RefObject<HTMLDivElement | null>;
+  noticeTarget: HTMLElement | null;
 }) {
   const bottom = useRef<HTMLDivElement>(null);
   const wasNearBottom = useRef(true);
@@ -56,18 +59,22 @@ export function Conversation({
           <p>{message.text}</p>
         </motion.article>
       ))}
-      {hasNew && (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => {
-            bottom.current?.scrollIntoView({ block: "nearest" });
-            setHasNew(false);
-          }}
-        >
-          查看新消息
-        </Button>
-      )}
+      {hasNew &&
+        noticeTarget &&
+        createPortal(
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              bottom.current?.scrollIntoView({ block: "nearest" });
+              setHasNew(false);
+            }}
+          >
+            查看新消息
+          </Button>,
+          noticeTarget,
+        )}
       <div ref={bottom} />
     </section>
   );

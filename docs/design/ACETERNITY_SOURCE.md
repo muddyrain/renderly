@@ -1,5 +1,7 @@
 # Studio Animated Tabs 来源与适配
 
+运行镜像将本项目根 LICENSE 与上游完整许可一同保留：`/app/LICENSE`、`/app/licenses/SHADCN_LICENSE.md`、`/app/licenses/INSPIRA_LICENSE.md`。Docker 直接复制原文件，来源正文与版权声明不改写。
+
 核查日期：2026-11-06。B3 使用维护者明确接受的 **Aceternity → Inspira UI MIT 移植 → Renderly React 适配** 链路；不是直接复制 Aceternity 当前 React registry，也不声称其当前官网许可是 MIT。
 
 ## 许可与固定来源

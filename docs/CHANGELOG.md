@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- PR review follow-up: make explicit Plan reveal independent of native pointer focus while cancelling delayed reveals after subsequent interaction; anchor new-message feedback outside the scroll area and preserve unsent reference drafts.
+- Restrict disabled Button semantics to native buttons through a type contract; include project/shadcn/Inspira license texts in the web image. Add real-adapter completion coverage and run Studio lifecycle tests in CI.
+
 - P0.10 B3.1: remove /legacy-demo, its Studio/SampleImage implementation and stylesheet, unused package manifest/inventory/reference images and the inactive nested lock. The root lock and current design system, photos and licenses remain.
 - Replace the existing vector favicon colors with Graphite/Sage and a contrasting edge.
 - Fix Plan live reduced-motion by removing the entire animated presence subtree in static mode; add a fixed “查看计划 · 3 步” shortcut to the single Plan without an approval gate.
