@@ -24,12 +24,12 @@ func registerMiddleware(h *server.Hertz, cfg config.Config, logger *slog.Logger)
 			logger.ErrorContext(ctx, "request panic", "request_id", RequestID(ctx))
 			c.Response.ResetBody()
 			c.AbortWithStatusJSON(consts.StatusInternalServerError, map[string]string{
-				"code": "internal_error", "message": "Internal server error",
+				"code": "internal_error", "message": "Internal server error", "request_id": RequestID(ctx),
 			})
 		},
 	)), cors.New(cors.Config{
 		AllowOrigins:  []string{cfg.WebOrigin},
-		AllowMethods:  []string{"GET", "OPTIONS"},
+		AllowMethods:  []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:  []string{"Content-Type", "X-Request-ID"},
 		ExposeHeaders: []string{"X-Request-ID"},
 		MaxAge:        time.Hour,

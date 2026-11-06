@@ -9,6 +9,9 @@ import (
 	"syscall"
 
 	"github.com/muddyrain/renderly/backend/internal/config"
+	"github.com/muddyrain/renderly/backend/internal/database"
+	"github.com/muddyrain/renderly/backend/internal/project"
+	"github.com/muddyrain/renderly/backend/internal/repository"
 	"github.com/muddyrain/renderly/backend/internal/server"
 )
 
@@ -21,7 +24,20 @@ func main() {
 
 func run() error {
 	cfg := config.Load()
-	api, err := server.New(cfg, slog.Default())
+	if err := cfg.Validate(); err != nil {
+		return err
+	}
+	deps := server.Dependencies{}
+	if cfg.DatabaseURL != "" {
+		pool, err := database.Open(context.Background(), cfg.DatabaseURL)
+		if err != nil {
+			return err
+		}
+		defer pool.Close() // HTTP run/drain finishes before database resources are released.
+		deps.Projects = project.New(repository.NewProjects(pool))
+		deps.Ready = database.Ready(pool, cfg)
+	}
+	api, err := server.New(cfg, slog.Default(), deps)
 	if err != nil {
 		return fmt.Errorf("initialize HTTP server: %w", err)
 	}
