@@ -13,5 +13,7 @@ backend/worker
 backend/bin
 data
 .storage
+review
+.playwright-mcp
 *.pem
 *.key

@@ -54,3 +54,15 @@ SIGINT/SIGTERM initiate a drain bounded to 10 seconds. The main process waits fo
 ## Future transport work
 
 [ADR-002](DECISIONS/0002-adopt-hertz.md) records the framework decision, network deployment constraints, and the verification plan for Agent Run/Task SSE and uploads. These features require separate implementation and acceptance. The current `/readyz` placeholder must be replaced with bounded adapter probes before using it for deployment gating.
+
+## Monorepo and frontend integration (P0.7–P0.9)
+
+The root pnpm Workspace discovers `apps/*` and `packages/*`. Only `apps/web` currently exists as an application package (`@renderly/web`); no empty shared packages or Turborepo have been introduced. Go Modules remain wholly under `backend` and are not represented as a JavaScript package.
+
+The web package contains the PC-first Studio, Gallery, Projects, Characters, Models and Settings views. Framer Motion and CSS implement the design handoff's transitions and interaction feedback, respecting reduced-motion preferences. A page-local sample image component handles loading/error presentation. No HTTP client package is extracted before stable API contracts exist.
+
+All creative interactions are local demos. A persistent banner identifies sample Agent conversation, plans, progress, images and usage. Demo timers are cancellable and cleared for new sessions/unmounting. API health/readiness are independent of these demo states; no provider credentials or live generation calls are wired.
+
+The root lockfile is authoritative for CI, Docker and local workspace installs. Typechecking runs `next typegen` before `tsc --noEmit`, so a clean checkout does not need an earlier build to supply route types. The original nested pnpm lock is preserved only as UI package provenance. The current frontend Dockerfile keeps the workspace directory layout so pnpm dependency links resolve. Full container image builds remain a separate deployment validation from Compose configuration parsing.
+
+Next, integrate Project create/list through typed frontend API calls and Go use cases backed by PostgreSQL. Keep actual backend task events separate from demo state; later SSE and upload work follows ADR-002.

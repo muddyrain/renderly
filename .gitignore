@@ -19,3 +19,5 @@ coverage/
 .vscode/
 data/
 .storage/
+review/
+.playwright-mcp/

@@ -1,0 +1,12 @@
+{
+  "name": "renderly",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": { "node": ">=22", "pnpm": "10.33.0" },
+  "scripts": {
+    "dev": "pnpm --filter @renderly/web dev",
+    "build": "pnpm --filter @renderly/web build",
+    "lint": "pnpm --filter @renderly/web lint",
+    "typecheck": "pnpm --filter @renderly/web typecheck"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Renderly UI Package",
+  "version": "0.2.0",
+  "scope": "PC-first frontend prototype",
+  "backend_connected": false,
+  "real_image_generation": false,
+  "demo_interactions": [
+    "agent prompt simulation",
+    "plan progress simulation",
+    "gallery filtering",
+    "screen navigation",
+    "image variant selection",
+    "toast feedback"
+  ],
+  "motion": [
+    "Framer Motion view transitions",
+    "message entrance",
+    "image crossfade",
+    "gallery layout",
+    "CSS ambient drift",
+    "agent waveform",
+    "focus glow",
+    "hover states"
+  ],
+  "mobile_design": "out of scope",
+  "validation": {
+    "zip_integrity": "pending",
+    "npm_install": "not completed in packaging environment",
+    "next_build": "not run"
+  }
+}

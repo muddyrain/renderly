@@ -8,5 +8,5 @@
 Local checks:
 ```bash
 cd backend && go test ./...
-cd apps/web && npm run lint
+pnpm lint && pnpm typecheck && pnpm build
 ```
