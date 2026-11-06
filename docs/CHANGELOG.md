@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- P0.10 B4–B6: connect six routes through one browser-memory workspace; preserve drafts across soft navigation and reset fixtures on refresh. PR #1 was merged at its exact reviewed HEAD before this branch.
+- Implement Gallery filters/favorites, detail, real preset versions/variants, keyboard comparison, original-JPEG download, removal and one-shot Studio references. Use restrained local Framer Motion layout; retain the previously authorized Inspira Tabs source/license chain without copying additional upstream components.
+- Add project/character CRUD and association cleanup, example model configuration and ratio/density/motion preferences. Freeze approval context and insert a completed demo into Gallery once; cancel runs on route/context changes.
+- Add 16 workspace domain/lifecycle tests beside the retained 12 Studio tests and Button type contract. CI executes both suites and strict side-effect import checks. Verify desktop layouts and browser workflows; no P1 or real business integration.
+- Remove the unused B2 empty component/styles, update local-demo documentation and keep all existing licenses. The new PR remains open for human review, without automatic merge.
+
+### Earlier B0–B3.1 and PR #1 changes
+
 - PR review follow-up: make explicit Plan reveal independent of native pointer focus while cancelling delayed reveals after subsequent interaction; anchor new-message feedback outside the scroll area and preserve unsent reference drafts.
 - Restrict disabled Button semantics to native buttons through a type contract; include project/shadcn/Inspira license texts in the web image. Add real-adapter completion coverage and run Studio lifecycle tests in CI.
 

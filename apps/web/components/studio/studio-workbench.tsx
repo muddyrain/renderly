@@ -83,7 +83,7 @@ export function StudioWorkbench() {
               {resetMode ? "载入预置示例？" : "开始新会话？"}
             </DialogTitle>
             <DialogDescription>
-              当前草稿、对话、引用和选择将清空；正在运行的演示会取消。内容不会保存到项目。
+              当前草稿、对话、引用和选择将清空；正在运行的演示会取消。Gallery、项目、角色和偏好会保留到刷新。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

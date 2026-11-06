@@ -12,6 +12,7 @@ import {
   demoAssets,
   selectedArtwork,
 } from "./studio-fixtures";
+import { defaultPlanContext } from "./workspace-defaults";
 
 export type DemoEvent =
   | { type: "step"; index: number }
@@ -90,8 +91,11 @@ export class DemoAgent {
   constructor(
     private adapter: DemoAdapter = createDemoAdapter(),
     preset = true,
+    private environment = { context: defaultPlanContext, ratio: () => "3:2" },
   ) {
     this.state = initialStudioState(1, preset);
+    this.state.context = this.environment.context();
+    if (this.state.brief) this.state.brief.ratio = this.environment.ratio();
   }
 
   getSnapshot = () => this.state;
@@ -136,7 +140,14 @@ export class DemoAgent {
     this.update({
       draft: "",
       revision,
-      brief: { ...(state.brief ?? defaultBrief()), goal: text },
+      brief: {
+        ...(state.brief ?? {
+          ...defaultBrief(),
+          ratio: this.environment.ratio(),
+        }),
+        goal: text,
+      },
+      context: this.environment.context(),
       phase: "awaiting_approval",
       steps: ["pending", "pending", "pending"],
       run: null,
@@ -174,6 +185,7 @@ export class DemoAgent {
       return true;
     this.update({
       brief: normalized,
+      context: this.environment.context(),
       revision: this.state.revision + 1,
       phase: "awaiting_approval",
       run: null,
@@ -186,14 +198,34 @@ export class DemoAgent {
 
   approve = () => {
     const state = this.state;
-    if (!this.active || state.phase !== "awaiting_approval" || !state.brief)
+    if (
+      !this.active ||
+      state.phase !== "awaiting_approval" ||
+      !state.brief ||
+      !state.context.model
+    )
       return false;
+    const { asset, version, variant, image } = selectedArtwork(state);
     const token = ++this.generation;
     const snapshot: RunSnapshot = Object.freeze({
       id: ++this.sequence,
       session: state.session,
       revision: state.revision,
       scenario: state.scenario,
+      context: Object.freeze({
+        project: state.context.project
+          ? Object.freeze({ ...state.context.project })
+          : null,
+        model: state.context.model
+          ? Object.freeze({ ...state.context.model })
+          : null,
+      }),
+      artwork: Object.freeze({
+        assetId: asset.id,
+        versionId: version.id,
+        variantId: variant.id,
+        imageId: image.id,
+      }),
       brief: Object.freeze({
         ...state.brief,
         references: Object.freeze([...state.brief.references]),
@@ -240,6 +272,14 @@ export class DemoAgent {
         this.invalidate();
         this.update({
           phase: "completed",
+          assetId: snapshot.artwork.assetId,
+          selections: {
+            ...this.state.selections,
+            [snapshot.artwork.assetId]: {
+              versionId: snapshot.artwork.versionId,
+              variantId: snapshot.artwork.variantId,
+            },
+          },
           steps: ["completed", "completed", "completed"],
           result: { source: "demo", revision: snapshot.revision, snapshot },
           messages: [
@@ -247,7 +287,7 @@ export class DemoAgent {
             {
               id: `${snapshot.session}:result:${snapshot.id}`,
               role: "assistant",
-              text: "本地演示已完成：展示预置素材供比较，没有生成、上传或保存图片。",
+              text: "本地演示已完成：预置素材已加入本次 Gallery，没有生成或上传图片；刷新重置。",
             },
           ],
           notice: "演示完成，画布显示预置样例结果。",
@@ -291,7 +331,27 @@ export class DemoAgent {
   };
   reset = (preset = false) => {
     this.invalidate();
-    this.update(initialStudioState(this.state.session + 1, preset));
+    const next = initialStudioState(this.state.session + 1, preset);
+    next.context = this.environment.context();
+    if (next.brief) next.brief.ratio = this.environment.ratio();
+    this.update(next);
+  };
+  refreshContext = () => {
+    this.cancel();
+    this.update({
+      context: this.environment.context(),
+      revision: this.state.revision + 1,
+      phase: this.state.brief ? "awaiting_approval" : "idle",
+      run: null,
+      error: null,
+      steps: ["pending", "pending", "pending"],
+      notice: "创作上下文已更新，原批准失效；草稿保留，请重新审阅。",
+    });
+  };
+  syncProjectName = (id: string, name: string) => {
+    if (this.state.context.project?.id !== id) return;
+    // Rename is display metadata; the approved run retains its frozen copy.
+    this.update({ context: { ...this.state.context, project: { id, name } } });
   };
   selectAsset = (assetId: string) => {
     if (demoAssets.some((asset) => asset.id === assetId))

@@ -36,12 +36,20 @@ export function CanvasPanel({
 }) {
   const [view, setView] = useState<CanvasView>("canvas");
   const { asset, version, variant, image } = selectedArtwork(state);
+  const approvedArtwork = state.result?.snapshot?.artwork;
+  const browsingOtherSample =
+    approvedArtwork &&
+    (asset.id !== approvedArtwork.assetId ||
+      version.id !== approvedArtwork.versionId ||
+      variant.id !== approvedArtwork.variantId);
   const resultLabel =
     !state.result || state.result.source === "preset"
       ? "样例素材 · 非本轮生成"
-      : state.result.revision !== state.revision
-        ? "上一轮演示结果 · 预置素材"
-        : "演示结果 · 预置素材，非模型输出";
+      : browsingOtherSample
+        ? "预置样图浏览 · 非本轮演示结果"
+        : state.result.revision !== state.revision
+          ? "上一轮演示结果 · 预置素材"
+          : "演示结果 · 预置素材，非模型输出";
   const choices = (
     <div className="studio-variant-choices" aria-label="预置变体">
       {version.variants.map((item, index) => {
@@ -130,6 +138,14 @@ export function CanvasPanel({
                       上次批准的演示快照 · r{state.result.snapshot.revision}
                     </h3>
                     <p>{state.result.snapshot.brief.goal}</p>
+                    <p>
+                      批准项目：
+                      {state.result.snapshot.context.project?.name ?? "未归属"}
+                    </p>
+                    <p>
+                      示例模型：{state.result.snapshot.context.model?.name} ·
+                      细节 {state.result.snapshot.context.model?.detail}/10
+                    </p>
                     <p className="text-muted-foreground">
                       画幅意向 {state.result.snapshot.brief.ratio} ·
                       不裁切或改变预置文件

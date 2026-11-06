@@ -1,12 +1,12 @@
 # Renderly Design Handoff
 
-## Current workspace — P0.10 B3.1 Code Review (2026-11-06)
+## Current workspace — P0.10 B4–B6 Code Review (2026-11-06)
 
 Graphite Atelier is the selected direction: [visual values and reference](design/VISUAL_DIRECTION_LOCK.md). The shared shell has graphite surfaces, Sage accents, a persistent Demo notice and project context header. Navigation contains Studio, Gallery, Projects, Characters, Models and Settings. Root redirects to Studio.
 
 Studio alone has a 352px left Creative Agent and a large right canvas. Conversation, editable Brief and three-step Plan use internal scrolling; approval/cancel and Composer remain fixed and reachable at 1280×720. A visible “查看计划 · 3 步” shortcut opens and scrolls to the same Plan. It shares expansion state and aria-controls with the Plan header; it is an optional shortcut, not a gate before approval. Keep 14px body/input text and 12px metadata.
 
-Canvas/Variants are real Radix tabs; parameters, zoom, local image variants/versions and reference continuation are connected to page-local Demo state. Reference continuation preserves unsent text, adding a template only to an empty composer. New-message feedback stays in the fixed action area while the conversation scrolls. New session is empty; default content is labelled preset and pending approval. Nothing is generated, uploaded or saved by a provider. Other five pages remain B2 skeletons.
+Canvas/Variants are real Radix tabs; parameters, zoom, local image variants/versions and reference continuation are connected to shared browser-memory Demo state. Reference continuation preserves unsent text, adding a template only to an empty composer. New-message feedback stays in the fixed action area while the conversation scrolls. New session is empty; default content is labelled preset and pending approval. Nothing is generated, uploaded or saved by a provider. Gallery now contains preset/local-result collections and a Radix detail/comparison dialog. Projects and Characters have local forms and confirmed deletions; Models and Settings expose applied values with real consumers. Each page has its own component, shared form/control styles and honest empty/error states.
 
 ## Components and assets
 
@@ -18,4 +18,4 @@ See [component provenance](design/SHADCN_SOURCE.md), [authorized Aceternity adap
 
 ## Boundaries
 
-Provider credentials stay server-side; model status, messages, plans, artwork and results are labelled Demo. This UI has no authentication, live generation, persistent project data, billing or business SSE. B3.1 stops at Code Review; B4 and P1 require separate authorization.
+Provider credentials stay server-side; model status, messages, plans, artwork and results are labelled Demo. This UI has no authentication, live generation, persistent project data, billing or business SSE. B4–B6 is complete as a local frontend demo and stops at the new PR review. P1 requires separate authorization. Soft navigation keeps drafts and workspace records; refresh resets them. Project context selection is visible in the shared header.

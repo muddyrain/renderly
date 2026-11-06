@@ -1,5 +1,7 @@
 "use client";
 
+import { useOptionalWorkspaceStore } from "@/components/workspace/workspace-provider";
+import { effectiveReducedMotion } from "@/lib/demo/workspace-defaults";
 import { useSyncExternalStore } from "react";
 
 const preference = "(prefers-reduced-motion: reduce)";
@@ -16,5 +18,12 @@ function serverSnapshot() {
 }
 
 export function useMotionPreference() {
-  return useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  const store = useOptionalWorkspaceStore();
+  const app = useSyncExternalStore<"system" | "reduce">(
+    store?.subscribe ?? (() => () => {}),
+    () => store?.getSnapshot().preferences.motion ?? "system",
+    () => "system",
+  );
+  const system = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  return effectiveReducedMotion(system, app);
 }

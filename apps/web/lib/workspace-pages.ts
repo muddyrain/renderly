@@ -5,8 +5,8 @@ export const workspacePages = {
   gallery: { href: "/gallery", label: "Gallery", description: "集中查看、整理和回顾你的视觉作品。" },
   projects: { href: "/projects", label: "Projects", description: "按创作目标组织项目，让想法与作品有处可寻。" },
   characters: { href: "/characters", label: "Characters", description: "为角色整理描述与参考资料。" },
-  models: { href: "/models", label: "Models", description: "查看生成服务的连接状态与可用模型。" },
-  settings: { href: "/settings", label: "Settings", description: "查看工作区和创作偏好。" },
+  models: { href: "/models", label: "Models", description: "审阅本地示例能力，配置下一份演示计划。" },
+  settings: { href: "/settings", label: "Settings", description: "调整画幅、作品密度与动效偏好。" },
 } as const;
 
 export type WorkspacePageKey = keyof typeof workspacePages;

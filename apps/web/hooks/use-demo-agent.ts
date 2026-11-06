@@ -1,14 +1,13 @@
 "use client";
-
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { DemoAgent } from "@/lib/demo/demo-agent";
-
+import { useEffect, useSyncExternalStore } from "react";
+import { useWorkspace } from "@/components/workspace/workspace-provider";
 export function useDemoAgent() {
-  const [agent] = useState(() => new DemoAgent());
+  const { store } = useWorkspace();
+  const agent = store.agent;
   useEffect(() => {
-    agent.activate();
-    return () => agent.dispose();
-  }, [agent]);
+    store.consumeIntent();
+    return () => agent.cancel();
+  }, [agent, store]);
   const state = useSyncExternalStore(
     agent.subscribe,
     agent.getSnapshot,

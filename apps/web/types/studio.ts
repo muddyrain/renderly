@@ -1,3 +1,5 @@
+import type { ArtworkSelection, PlanContext } from "./workspace";
+
 export type DemoPhase =
   | "idle"
   | "awaiting_approval"
@@ -28,6 +30,8 @@ export interface DemoMessage {
 }
 
 export interface RunSnapshot {
+  readonly context: Readonly<PlanContext>;
+  readonly artwork: Readonly<ArtworkSelection>;
   readonly id: number;
   readonly session: number;
   readonly revision: number;
@@ -39,6 +43,7 @@ export interface RunSnapshot {
 }
 
 export interface StudioState {
+  context: PlanContext;
   session: number;
   revision: number;
   phase: DemoPhase;
