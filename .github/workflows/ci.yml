@@ -6,12 +6,37 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      RENDERLY_TEST_DATABASE_URL: postgres://renderly:renderly_test@127.0.0.1:5432/renderly_test?sslmode=disable
+      RENDERLY_REQUIRE_DB_TESTS: '1'
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: renderly
+          POSTGRES_PASSWORD: renderly_test
+          POSTGRES_DB: renderly_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U renderly -d renderly_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
+      - run: ./scripts/sqlc.sh generate
+      - run: git diff --exit-code -- backend/internal/db && test -z "$(git ls-files --others --exclude-standard backend/internal/db)"
+      - run: cd backend && go run ./cmd/db up && go run ./cmd/db status && go run ./cmd/db up
+        env:
+          DATABASE_URL: postgres://renderly:renderly_test@127.0.0.1:5432/renderly_test?sslmode=disable
+      - run: cd backend && go run ./cmd/db bootstrap && go run ./cmd/db bootstrap
+        env:
+          DATABASE_URL: postgres://renderly:renderly_test@127.0.0.1:5432/renderly_test?sslmode=disable
+          APP_ENV: test
+          API_ADDR: 127.0.0.1:8080
+          RENDERLY_LOCAL_IDENTITY: 'true'
       - run: cd backend && go test ./...
       - run: cd backend && go vet ./...
       - run: cd backend && test -z "$(gofmt -l .)"
@@ -30,6 +55,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @renderly/web test:studio
       - run: pnpm --filter @renderly/web test:workspace
+      - run: pnpm --filter @renderly/web test:projects
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm --filter @renderly/web exec tsc --noEmit --noUncheckedSideEffectImports

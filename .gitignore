@@ -21,3 +21,4 @@ data/
 .storage/
 review/
 .playwright-mcp/
+.tools/

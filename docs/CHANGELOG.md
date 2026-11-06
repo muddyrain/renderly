@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- P1: merge exact reviewed PR #2, then add real workspace-scoped project create/list/detail/edit/soft delete via Go, generated sqlc, pgx and PostgreSQL. Preserve initial migration; add forward deleted_at migration and idempotent explicit developer bootstrap.
+- Add default-disabled, development/test loopback identity and live project readiness; preserve standard HTTP/shutdown and independent Worker. Fixed tool versions, strict payload/Unicode/pagination validation and safe error contracts are documented.
+- Keep pure Demo independent; add one same-origin connected project source across six routes, pending/uncertain-write guards, late-list isolation, soft-delete reconciliation and truthful persistence copy.
+- Add real PostgreSQL/HTTP integration, frontend project/proxy tests and CI services/generation checks. P1 stops at a Ready PR without auto-merge; no generation, upload or other resource persistence.
+
+### Earlier frontend closeout
+
 - P0.10 B4–B6: connect six routes through one browser-memory workspace; preserve drafts across soft navigation and reset fixtures on refresh. PR #1 was merged at its exact reviewed HEAD before this branch.
 - Implement Gallery filters/favorites, detail, real preset versions/variants, keyboard comparison, original-JPEG download, removal and one-shot Studio references. Use restrained local Framer Motion layout; retain the previously authorized Inspira Tabs source/license chain without copying additional upstream components.
 - Add project/character CRUD and association cleanup, example model configuration and ratio/density/motion preferences. Freeze approval context and insert a completed demo into Gallery once; cancel runs on route/context changes.
